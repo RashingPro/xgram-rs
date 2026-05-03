@@ -1,0 +1,27 @@
+[package]
+name = "xgram"
+
+version.workspace = true
+description.workspace = true
+documentation.workspace = true
+homepage.workspace = true
+repository.workspace = true
+authors.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+edition.workspace = true
+rust-version.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+xgram-proc.workspace = true
+xgram-telegram-api.workspace = true
+xgram-utils.workspace = true
+
+colored.workspace = true
+hashbrown.workspace = true
+log.workspace = true
+tokio.workspace = true
