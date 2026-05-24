@@ -5,6 +5,7 @@ members = ["xgram", "xgram-proc", "xgram-telegram-api", "xgram-utils"]
 [workspace.package]
 version = "0.1.0"
 description = ""
+license = "MIT"
 documentation = ""
 homepage = ""
 repository = ""
