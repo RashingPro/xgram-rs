@@ -26,5 +26,5 @@ pub fn init_config(config: GlobalConfig) {
 pub fn get_config() -> &'static GlobalConfig {
     GLOBAL_CONFIG
         .get()
-        .unwrap_or_else(|| panic!("global config was not initalized"))
+        .unwrap_or_else(|| panic!("global config was not initialized"))
 }
