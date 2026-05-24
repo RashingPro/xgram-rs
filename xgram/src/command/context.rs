@@ -1,8 +1,8 @@
 use xgram_telegram_api::client::TelegramApiClient;
 use xgram_telegram_api::endpoints::send_message::SendMessageEndpoint;
 use xgram_telegram_api::error::TelegramApiError;
-use xgram_telegram_api::types::message::reply_parameters::ReplyParameters;
 use xgram_telegram_api::types::message::Message;
+use xgram_telegram_api::types::message::reply_parameters::ReplyParameters;
 
 pub struct CommandContext {
     message: Message,

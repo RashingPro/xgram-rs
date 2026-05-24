@@ -1,5 +1,5 @@
-use crate::command::context::CommandContext;
 use crate::command::CommandHandler;
+use crate::command::context::CommandContext;
 use colored::Colorize;
 use hashbrown::HashMap;
 use log::{error, trace};
@@ -7,9 +7,9 @@ use std::sync::Arc;
 use xgram_telegram_api::client::TelegramApiClient;
 use xgram_telegram_api::types::message::entity::MessageEntityType;
 use xgram_telegram_api::types::update::UpdateKind;
-use xgram_telegram_api::update_receiver::http::HttpUpdateReceiver;
 use xgram_telegram_api::update_receiver::UpdateReceiver;
-use xgram_utils::config::{init_config, GlobalConfig};
+use xgram_telegram_api::update_receiver::http::HttpUpdateReceiver;
+use xgram_utils::config::{GlobalConfig, init_config};
 
 pub struct Bot {
     client: TelegramApiClient,

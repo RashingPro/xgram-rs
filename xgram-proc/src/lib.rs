@@ -2,7 +2,7 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::punctuated::Punctuated;
 use syn::token::Comma;
-use syn::{parse_macro_input, FnArg, Ident, ItemFn, PatType};
+use syn::{FnArg, Ident, ItemFn, PatType, parse_macro_input};
 
 #[proc_macro_attribute]
 pub fn command_handler(_: TokenStream, item: TokenStream) -> TokenStream {
