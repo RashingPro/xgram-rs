@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["xgram", "xgram-proc", "xgram-telegram-api", "xgram-utils"]
+members = ["crates/*"]
 
 [workspace.package]
 version = "0.1.0"
@@ -29,9 +29,9 @@ lto = true
 codegen-units = 1
 
 [workspace.dependencies]
-xgram-proc = { path = "xgram-proc", version = "=0.1.0" }
-xgram-telegram-api = { path = "xgram-telegram-api", version = "=0.1.0" }
-xgram-utils = { path = "xgram-utils", version = "=0.1.0" }
+xgram-proc = { path = "crates/xgram-proc", version = "=0.1.0" }
+xgram-telegram-api = { path = "crates/xgram-telegram-api", version = "=0.1.0" }
+xgram-utils = { path = "crates/xgram-utils", version = "=0.1.0" }
 
 colored = "3.1.1"
 hashbrown = "0.17.1"
