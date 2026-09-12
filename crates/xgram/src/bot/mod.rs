@@ -66,7 +66,7 @@ impl Bot {
         }
     }
 
-    #[allow(clippy::single_match)] // TODO: remove when more update handlers are present
+    #[allow(clippy::single_match, reason = "temporary")] // TODO: remove when more update handlers are present
     async fn handle_update(&self, update: Update) {
         match update.update_kind {
             UpdateKind::NewMessage(message) => {
