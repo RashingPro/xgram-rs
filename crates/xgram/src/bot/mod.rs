@@ -1,5 +1,5 @@
-use crate::command::CommandHandler;
 use crate::command::context::CommandContext;
+use crate::command::{CommandHandler, CommandHandlerFuture};
 use colored::Colorize;
 use hashbrown::HashMap;
 use log::{error, trace};
@@ -28,14 +28,18 @@ impl Bot {
         }
     }
 
-    pub fn register_command(&mut self, trigger: String, handler: CommandHandler) {
+    pub fn register_command(
+        &mut self,
+        trigger: String,
+        handler: fn(CommandContext) -> CommandHandlerFuture
+    ) {
         if self.commands.contains_key(&trigger) {
             panic!(
                 "command {} already registered",
                 format!("/{}", trigger).yellow()
             );
         }
-        self.commands.insert(trigger, handler);
+        self.commands.insert(trigger, Box::new(handler));
     }
 
     pub async fn run(self) {
