@@ -110,16 +110,18 @@ pub struct Message {
     pub checklist_tasks_done: Option<()>,         // TODO
     pub checklist_tasks_added: Option<()>,        // TODO
     pub direct_message_price_changed: Option<()>, // TODO
-    pub forum_topic_created: Option<()>           // TODO
+    pub forum_topic_created: Option<()>           /* TODO */
 
-                                                  // TODO add other fields
+                                                  /* TODO add other fields */
 }
 
 /// Telegram Bot API truncates nested `reply_to_message` fields.
-/// As a result, inner messages may not contain reply information even if _they are_ replies themselves.
+/// As a result, inner messages may not contain reply information even if _they
+/// are_ replies themselves.
 ///
-/// `Truncated` means that reply relationship is unknown due to Telegram API limitations.
-/// Please note, that this state can _not_ be validated as Telegram Bot API does _not_ provide a method for fetching messages by their IDs.
+/// `Truncated` means that reply relationship is unknown due to Telegram API
+/// limitations. Please note, that this state can _not_ be validated as Telegram
+/// Bot API does _not_ provide a method for fetching messages by their IDs.
 ///
 /// `Complete` means that reply relationship is known exactly:
 /// - `Complete(Some(_))` — message is a reply
@@ -153,8 +155,8 @@ where
         )))
     };
 
-    let mut message =
-        serde_json::from_value::<Message>(serde_json::Value::Object(map)).map_err(serde::de::Error::custom)?; // Deserialization isn't failing because of Default trait implemented for ReplyToMessage
+    let mut message = serde_json::from_value::<Message>(serde_json::Value::Object(map))
+        .map_err(serde::de::Error::custom)?; // Deserialization isn't failing because of Default trait implemented for ReplyToMessage
     message.reply_to_message = inner_reply_to_message;
 
     Ok(ReplyToMessage::Complete(Some(Box::new(message))))

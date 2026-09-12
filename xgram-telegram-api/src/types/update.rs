@@ -58,12 +58,17 @@ impl<'de> Deserialize<'de> for Update {
             .remove("update_id")
             .ok_or(serde::de::Error::missing_field("update_id"))?
             .as_u64()
-            .ok_or(serde::de::Error::custom("expected update_id to be integer"))? as u32;
+            .ok_or(serde::de::Error::custom("expected update_id to be integer"))?
+            as u32;
 
         let (update_body_key, update_body) = map.into_iter().next().unwrap();
         let update_body = match update_body {
             Value::Object(obj) => obj,
-            _ => return Err(serde::de::Error::custom("expected update body to be object"))
+            _ => {
+                return Err(serde::de::Error::custom(
+                    "expected update body to be object"
+                ));
+            }
         };
 
         macro_rules! update_body_match {
@@ -113,6 +118,9 @@ impl<'de> Deserialize<'de> for Update {
             }
         );
 
-        Ok(Self { update_id, update_kind })
+        Ok(Self {
+            update_id,
+            update_kind
+        })
     }
 }

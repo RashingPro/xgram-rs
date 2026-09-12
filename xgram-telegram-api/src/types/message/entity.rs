@@ -16,7 +16,9 @@ pub enum MessageEntityType {
     Hashtag,
     Cashtag,
     BotCommand,
-    Url { url: Option<String> },
+    Url {
+        url: Option<String>
+    },
     Email,
     PhoneNumber,
     Bold,
@@ -27,9 +29,18 @@ pub enum MessageEntityType {
     Blockquote,
     ExpandableBlockquote,
     Code,
-    Pre { language: Option<String> },
+    Pre {
+        language: Option<String>
+    },
     TextLink,
-    TextMention { user: User },
-    CustomEmoji { custom_emoji_id: String },
-    DateTime { unix_time: u32, date_time_format: String }
+    TextMention {
+        user: User
+    },
+    CustomEmoji {
+        custom_emoji_id: String
+    },
+    DateTime {
+        unix_time: u32,
+        date_time_format: String
+    }
 }
