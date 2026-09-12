@@ -4,20 +4,20 @@ use log::trace;
 use reqwest::Client;
 use serde::de::DeserializeOwned;
 use std::sync::Arc;
-use xgram_utils::config::get_config;
+use xgram_utils::types::BotConfigArc;
 
 #[derive(Clone)]
 pub struct TelegramApiClient {
+    config: BotConfigArc,
     token: Arc<String>,
-    base_url: &'static str,
     client: Client
 }
 
 impl TelegramApiClient {
-    pub fn new(token: Arc<String>) -> Self {
+    pub fn new(config: BotConfigArc, token: Arc<String>) -> Self {
         Self {
+            config,
             token,
-            base_url: get_config().base_api_url,
             client: Client::new()
         }
     }
@@ -30,7 +30,7 @@ impl TelegramApiClient {
         trace!("Making request {:#?}", endpoint);
         let request = self
             .client
-            .post(endpoint.craft_url(&self.token, self.base_url))
+            .post(endpoint.craft_url(&self.token, self.config.base_api_url))
             .json(endpoint)
             .send();
         let response: TelegramApiResponse<R> = request.await?.json().await?;

@@ -9,21 +9,23 @@ use xgram_telegram_api::types::message::entity::MessageEntityType;
 use xgram_telegram_api::types::update::UpdateKind;
 use xgram_telegram_api::update_receiver::UpdateReceiver;
 use xgram_telegram_api::update_receiver::http::HttpUpdateReceiver;
-use xgram_utils::config::{GlobalConfig, init_config};
+use xgram_utils::config::BotConfig;
+use xgram_utils::types::BotConfigArc;
 
 pub struct Bot {
+    config: BotConfigArc,
     client: TelegramApiClient,
     commands: HashMap<String, CommandHandler>
 }
 
 impl Bot {
-    pub fn new(token: String, config: GlobalConfig) -> Self {
+    pub fn new(token: String, config: BotConfig) -> Self {
         let token = Arc::new(token);
-
-        init_config(config);
+        let config = Arc::new(config);
 
         Self {
-            client: TelegramApiClient::new(token.clone()),
+            config: config.clone(),
+            client: TelegramApiClient::new(config.clone(), token.clone()),
             commands: HashMap::new()
         }
     }
@@ -43,7 +45,7 @@ impl Bot {
     }
 
     pub async fn run(self) {
-        let update_receiver = HttpUpdateReceiver::new(self.client.clone());
+        let update_receiver = HttpUpdateReceiver::new(self.config.clone(), self.client.clone());
         let mut update_receiver = update_receiver.spawn();
 
         while let Some(update) = update_receiver.recv().await {

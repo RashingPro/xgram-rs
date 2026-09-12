@@ -8,25 +8,22 @@ use std::time::Duration;
 use tokio::sync::mpsc;
 use tokio::sync::mpsc::Receiver;
 use tokio::time::sleep;
-use xgram_utils::config::get_config;
+use xgram_utils::types::BotConfigArc;
 
 pub struct HttpUpdateReceiver {
-    client: TelegramApiClient,
-    polling_timeout: u8
+    config: BotConfigArc,
+    client: TelegramApiClient
 }
 
 impl HttpUpdateReceiver {
-    pub fn new(client: TelegramApiClient) -> Self {
-        Self {
-            client,
-            polling_timeout: get_config().updates_http_polling_timeout
-        }
+    pub fn new(config: BotConfigArc, client: TelegramApiClient) -> Self {
+        Self { config, client }
     }
 }
 
 impl UpdateReceiver for HttpUpdateReceiver {
     fn spawn(self) -> Receiver<Result<Update, TelegramApiError>> {
-        let (tx, rx) = mpsc::channel(get_config().updates_channel_capacity);
+        let (tx, rx) = mpsc::channel(self.config.updates_channel_capacity);
 
         tokio::spawn(async move {
             let mut offset = 0;
@@ -37,7 +34,7 @@ impl UpdateReceiver for HttpUpdateReceiver {
                     .client
                     .make_request(&GetUpdatesEndpoint {
                         offset: Some(offset),
-                        timeout: Some(self.polling_timeout),
+                        timeout: Some(self.config.updates_http_polling_timeout),
                         ..Default::default()
                     })
                     .await;
