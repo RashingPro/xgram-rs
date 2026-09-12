@@ -1,3 +1,5 @@
+//! Main struct and managing logic.
+
 pub mod error;
 
 use crate::bot::error::{BotError, BotResult};
@@ -16,6 +18,21 @@ use xgram_telegram_api::update_receiver::http::HttpUpdateReceiver;
 use xgram_utils::config::BotConfig;
 use xgram_utils::types::{BotConfigArc, TokenArc};
 
+/// Main framework's struct.
+/// # Example
+/// ```rust,ignore
+/// use xgram::prelude::*;
+///
+/// #[tokio::main]
+/// async fn main() -> BotResult {
+///     dotenv::dotenv().unwrap();
+///
+///     let token = std::env::var("TOKEN").unwrap();
+///
+///     let mut bot = Bot::new(token, Default::default());
+///     bot.run().await
+/// }
+/// ```
 pub struct Bot {
     config: BotConfigArc,
     client: TelegramApiClient,
@@ -36,6 +53,28 @@ impl Bot {
         }
     }
 
+    /// Registers new command for bot.
+    /// # Example
+    /// ```rust,ignore
+    /// use xgram::prelude::*;
+    ///
+    /// #[tokio::main]
+    /// async fn main() -> BotResult {
+    ///     dotenv::dotenv().unwrap();
+    ///
+    ///     let token = std::env::var("TOKEN").unwrap();
+    ///
+    ///     let mut bot = Bot::new(token, Default::default());
+    ///     bot.register_command("start", command_start);
+    ///     bot.run().await
+    /// }
+    ///
+    /// #[command_handler]
+    /// async fn command_start(ctx: CommandContext) -> CommandHandlerResult {
+    ///     ctx.reply("Hello XGram.rs World!").await?;
+    ///     Ok(())
+    /// }
+    /// ```
     pub fn register_command(
         &mut self,
         trigger: impl Into<String>,
@@ -52,6 +91,13 @@ impl Bot {
         self.commands.insert(trigger, Box::new(handler));
     }
 
+    /// Consumes the `Bot` instance and runs the main loop.
+    ///
+    /// Please note, that this function returns `!` (never type) wrapped in
+    /// `Result`, which may require nightly toolchain or explicit
+    /// `#![feature(never_type)]`
+    ///
+    /// See: https://doc.rust-lang.org/std/primitive.never.html
     pub async fn run(self) -> BotResult {
         let update_receiver = HttpUpdateReceiver::new(self.config.clone(), self.client.clone());
         let mut update_receiver = update_receiver.spawn();

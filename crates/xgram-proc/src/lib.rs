@@ -4,6 +4,23 @@ use syn::punctuated::Punctuated;
 use syn::token::Comma;
 use syn::{FnArg, Ident, ItemFn, PatType, ReturnType, parse_macro_input, parse_quote};
 
+/// Procedural macros for wrapping command handlers.
+/// ```rust,ignore
+/// #[command_handler]
+/// async fn foo(ctx: CommandContext) -> Foo {
+///     /* function body */
+/// }
+///
+/// // Resolves into:
+///
+/// fn foo(ctx: CommandContext) -> Pin<Box<dyn Future<Output = Foo> + Send>> {
+///     async fn foo(ctx: CommandContext) -> Foo {
+///         /* function body */
+///     }
+///     
+///     Box::pin(foo(ctx))
+/// }
+/// ```
 #[proc_macro_attribute]
 pub fn command_handler(_: TokenStream, item: TokenStream) -> TokenStream {
     let input = parse_macro_input!(item as ItemFn);

@@ -1,3 +1,5 @@
+//! Telegram commands related logic.
+
 pub mod context;
 pub mod error;
 
