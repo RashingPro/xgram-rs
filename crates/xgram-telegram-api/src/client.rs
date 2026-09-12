@@ -3,18 +3,17 @@ use crate::error::TelegramApiError;
 use log::trace;
 use reqwest::Client;
 use serde::de::DeserializeOwned;
-use std::sync::Arc;
-use xgram_utils::types::BotConfigArc;
+use xgram_utils::types::{BotConfigArc, TokenArc};
 
 #[derive(Clone)]
 pub struct TelegramApiClient {
     config: BotConfigArc,
-    token: Arc<String>,
+    token: TokenArc,
     client: Client
 }
 
 impl TelegramApiClient {
-    pub fn new(config: BotConfigArc, token: Arc<String>) -> Self {
+    pub fn new(config: BotConfigArc, token: TokenArc) -> Self {
         Self {
             config,
             token,

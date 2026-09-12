@@ -10,7 +10,7 @@ use xgram_telegram_api::types::update::UpdateKind;
 use xgram_telegram_api::update_receiver::UpdateReceiver;
 use xgram_telegram_api::update_receiver::http::HttpUpdateReceiver;
 use xgram_utils::config::BotConfig;
-use xgram_utils::types::BotConfigArc;
+use xgram_utils::types::{BotConfigArc, TokenArc};
 
 pub struct Bot {
     config: BotConfigArc,
@@ -20,7 +20,7 @@ pub struct Bot {
 
 impl Bot {
     pub fn new(token: String, config: BotConfig) -> Self {
-        let token = Arc::new(token);
+        let token: TokenArc = Arc::from(token);
         let config = Arc::new(config);
 
         Self {
