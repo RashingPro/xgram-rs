@@ -2,7 +2,7 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::punctuated::Punctuated;
 use syn::token::Comma;
-use syn::{FnArg, Ident, ItemFn, PatType, parse_macro_input};
+use syn::{FnArg, Ident, ItemFn, PatType, ReturnType, parse_macro_input, parse_quote};
 
 #[proc_macro_attribute]
 pub fn command_handler(_: TokenStream, item: TokenStream) -> TokenStream {
@@ -13,6 +13,11 @@ pub fn command_handler(_: TokenStream, item: TokenStream) -> TokenStream {
     let block = input.block;
     let attrs = input.attrs;
     let args_declaration = input.sig.inputs;
+    let ret = match input.sig.output {
+        ReturnType::Default => parse_quote!(()),
+        ReturnType::Type(_, ty) => ty
+    };
+
     let mut args: Punctuated<Ident, Comma> = Punctuated::new();
     for arg in &args_declaration {
         match arg {
@@ -29,11 +34,10 @@ pub fn command_handler(_: TokenStream, item: TokenStream) -> TokenStream {
 
     quote! {
         #(#attrs)*
-        #vis fn #fn_name(#args_declaration) -> std::pin::Pin<Box<dyn Future<Output = ()> + Send + 'static>> {
-            async fn #fn_name(#args_declaration) #block
+        #vis fn #fn_name(#args_declaration) -> std::pin::Pin<Box<dyn Future<Output = #ret> + Send + 'static>> {
+            async fn #fn_name(#args_declaration) -> #ret #block
 
             Box::pin(#fn_name(#args))
         }
-    }
-    .into()
+    }.into()
 }
