@@ -56,13 +56,13 @@ async fn main() {
     };
 
     let mut bot = Bot::new(token, config);
-    bot.register_command(String::from("start"), command_start);
+    bot.register_command("start", command_start);
     bot.run().await;
 }
 
 #[command_handler]
 async fn command_start(ctx: CommandContext) {
-    ctx.reply(String::from("Hello XGram.rs World!")).await.unwrap();
+    ctx.reply("Hello XGram.rs World!").await.unwrap();
 }
 ```
 

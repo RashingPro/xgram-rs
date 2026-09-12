@@ -20,7 +20,9 @@ pub struct Bot {
 }
 
 impl Bot {
-    pub fn new(token: String, config: BotConfig) -> Self {
+    pub fn new(token: impl Into<String>, config: BotConfig) -> Self {
+        let token = token.into();
+
         let token: TokenArc = Arc::from(token);
         let config = Arc::new(config);
 
@@ -33,9 +35,11 @@ impl Bot {
 
     pub fn register_command(
         &mut self,
-        trigger: String,
+        trigger: impl Into<String>,
         handler: fn(CommandContext) -> CommandHandlerFuture
     ) {
+        let trigger = trigger.into();
+
         if self.commands.contains_key(&trigger) {
             panic!(
                 "command {} already registered",
