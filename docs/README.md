@@ -41,8 +41,8 @@ use xgram::prelude::*;
 
 #[tokio::main]
 async fn main() {
-    pretty_env_logger::init();
     dotenv::dotenv().unwrap();
+    pretty_env_logger::init();
 
     let token = std::env::var("TOKEN").unwrap();
     let config = BotConfig {
