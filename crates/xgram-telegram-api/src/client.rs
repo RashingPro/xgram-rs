@@ -3,6 +3,7 @@ use crate::error::TelegramApiError;
 use log::trace;
 use reqwest::Client;
 use serde::de::DeserializeOwned;
+use std::fmt::Debug;
 use xgram_utils::types::{BotConfigArc, TokenArc};
 
 #[derive(Clone)]
@@ -23,7 +24,7 @@ impl TelegramApiClient {
 
     pub async fn make_request<R, T>(&self, endpoint: &T) -> Result<R, TelegramApiError>
     where
-        R: DeserializeOwned,
+        R: DeserializeOwned + Debug,
         T: TelegramApiEndpoint<R>
     {
         trace!("Making request {:#?}", endpoint);
@@ -33,6 +34,7 @@ impl TelegramApiClient {
             .json(endpoint)
             .send();
         let response: TelegramApiResponse<R> = request.await?.json().await?;
+        trace!("Got response from {:#?}: {:#?}", endpoint, response);
         if !response.ok {
             return Err(TelegramApiError::NotSuccess(
                 response

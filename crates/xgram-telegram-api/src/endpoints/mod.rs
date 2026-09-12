@@ -5,7 +5,7 @@ use std::fmt::Debug;
 pub mod get_updates;
 pub mod send_message;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct TelegramApiResponse<R> {
     pub ok: bool,
     pub description: Option<String>,
@@ -14,7 +14,7 @@ pub struct TelegramApiResponse<R> {
 
 pub trait TelegramApiEndpoint<R>: Serialize + Debug
 where
-    R: DeserializeOwned
+    R: DeserializeOwned + Debug
 {
     fn craft_url(&self, token: &str, base_url: &str) -> String;
 }
