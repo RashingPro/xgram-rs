@@ -110,9 +110,9 @@ pub struct Message {
     pub checklist_tasks_done: Option<()>,         // TODO
     pub checklist_tasks_added: Option<()>,        // TODO
     pub direct_message_price_changed: Option<()>, // TODO
-    pub forum_topic_created: Option<()>           /* TODO */
-
-                                                  /* TODO add other fields */
+    pub forum_topic_created: Option<()>           /* TODO
+                                                   *
+                                                   * TODO add other fields */
 }
 
 /// Telegram Bot API truncates nested `reply_to_message` fields.
