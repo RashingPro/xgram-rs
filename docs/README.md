@@ -15,12 +15,10 @@ Tokio-powered concurrency.
 
 ### Creating bot
 
-Open chat with [@BotFather](https://t.me/BotFather) in Telegram.
-Create a bot with `/newbot` command.
-In the end, you will receive token - a string like that `1234567890:ABCdefGH-AbCd318_someRandom`.  
+Open chat with [@BotFather](https://t.me/BotFather) in Telegram. Create a bot with `/newbot` command. In the end, you
+will receive token - a string like this `1234567890:ABCdefGH-AbCd318_someRandom`.  
 Don't share the token with anybody (token is like a password to control bot), don't store it directly in code and don't
-commit to VCS.
-Instead, create `.env` file and put it there:
+commit to VCS. Instead, create `.env` file and put it there:
 
 ```dotenv
 TOKEN=1234567890:ABCdefGH-AbCd318_someRandom
@@ -30,6 +28,7 @@ TOKEN=1234567890:ABCdefGH-AbCd318_someRandom
 
 ```toml
 [dependencies]
+xgram = "..."
 dotenv = "..."
 pretty_env_logger = "..." # You can use whatever logger you like
 tokio = { version = "...", features = ["rt-multi-thread", "macros"] }
@@ -38,11 +37,10 @@ tokio = { version = "...", features = ["rt-multi-thread", "macros"] }
 ### Hello World Bot
 
 ```rust
-use std::pin::Pin;
 use xgram::bot::Bot;
 use xgram::command::context::CommandContext;
 use xgram::proc::command_handler;
-use xgram::utils::config::GlobalConfig;
+use xgram::utils::config::BotConfig;
 
 #[tokio::main]
 async fn main() {
@@ -50,13 +48,13 @@ async fn main() {
     dotenv::dotenv().unwrap();
 
     let token = std::env::var("TOKEN").unwrap();
-    let config = GlobalConfig {
+    let config = BotConfig {
         ..Default::default()
     };
 
     let mut bot = Bot::new(token, config);
-    bot.register_command(String::from("start"), Box::new(command_start));
-    bot.run().await
+    bot.register_command(String::from("start"), command_start);
+    bot.run().await;
 }
 
 #[command_handler]
