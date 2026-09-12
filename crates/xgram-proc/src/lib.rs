@@ -34,10 +34,10 @@ pub fn command_handler(_: TokenStream, item: TokenStream) -> TokenStream {
 
     quote! {
         #(#attrs)*
-        #vis fn #fn_name(#args_declaration) -> std::pin::Pin<Box<dyn Future<Output = #ret> + Send + 'static>> {
+        #vis fn #fn_name(#args_declaration) -> ::std::pin::Pin<::std::boxed::Box<dyn ::core::future::Future<Output = #ret> + ::core::marker::Send>> {
             async fn #fn_name(#args_declaration) -> #ret #block
 
-            Box::pin(#fn_name(#args))
+            ::std::boxed::Box::pin(#fn_name(#args))
         }
     }.into()
 }
