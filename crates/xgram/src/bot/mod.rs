@@ -2,7 +2,7 @@ use crate::command::context::CommandContext;
 use crate::command::{CommandHandler, CommandHandlerFuture};
 use colored::Colorize;
 use hashbrown::HashMap;
-use log::{error, trace};
+use log::{error, info, trace};
 use std::sync::Arc;
 use str_indices::utf16;
 use xgram_telegram_api::client::TelegramApiClient;
@@ -48,6 +48,8 @@ impl Bot {
     pub async fn run(self) {
         let update_receiver = HttpUpdateReceiver::new(self.config.clone(), self.client.clone());
         let mut update_receiver = update_receiver.spawn();
+
+        info!("Running update polling");
 
         let slf = Arc::new(self);
         while let Some(update) = update_receiver.recv().await {
