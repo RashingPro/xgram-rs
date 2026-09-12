@@ -46,7 +46,7 @@ tokio = { version = "...", features = ["rt-multi-thread", "macros"] }
 use xgram::prelude::*;
 
 #[tokio::main]
-async fn main() {
+async fn main() -> BotResult {
     dotenv::dotenv().unwrap();
     pretty_env_logger::init();
 
@@ -57,12 +57,13 @@ async fn main() {
 
     let mut bot = Bot::new(token, config);
     bot.register_command("start", command_start);
-    bot.run().await;
+    bot.run().await
 }
 
 #[command_handler]
-async fn command_start(ctx: CommandContext) {
-    ctx.reply("Hello XGram.rs World!").await.unwrap();
+async fn command_start(ctx: CommandContext) -> CommandHandlerResult {
+    ctx.reply("Hello XGram.rs World!").await?;
+    Ok(())
 }
 ```
 
