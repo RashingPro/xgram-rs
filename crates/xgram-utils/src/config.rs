@@ -10,7 +10,7 @@ impl Default for BotConfig {
         Self {
             base_api_url: "https://api.telegram.org/",
             updates_channel_capacity: 32,
-            updates_http_polling_timeout: 10
+            updates_http_polling_timeout: 30
         }
     }
 }
