@@ -1,3 +1,6 @@
+pub mod error;
+
+use crate::bot::error::{BotError, BotResult};
 use crate::command::context::CommandContext;
 use crate::command::{CommandHandler, CommandHandlerFuture};
 use colored::Colorize;
@@ -49,7 +52,7 @@ impl Bot {
         self.commands.insert(trigger, Box::new(handler));
     }
 
-    pub async fn run(self) {
+    pub async fn run(self) -> BotResult {
         let update_receiver = HttpUpdateReceiver::new(self.config.clone(), self.client.clone());
         let mut update_receiver = update_receiver.spawn();
 
@@ -62,16 +65,27 @@ impl Bot {
                     trace!(target: "main_loop", "Received update: {:#?}", update);
                     {
                         let slf = slf.clone();
-                        tokio::spawn(async move { slf.handle_update(update).await });
+                        tokio::spawn(async move {
+                            match slf.handle_update(update).await {
+                                Ok(_) => {
+                                    trace!(target: "main_loop", "Successfully handled update");
+                                }
+                                Err(err) => {
+                                    error!(target: "main_loop", "Failed to handle update: {}", err);
+                                }
+                            }
+                        });
                     }
                 }
                 Err(err) => error!(target: "main_loop", "{}", err)
             }
         }
+
+        Err(BotError::UnreachableCodeReached)
     }
 
     #[allow(clippy::single_match, reason = "temporary")] // TODO: remove when more update handlers are present
-    async fn handle_update(&self, update: Update) {
+    async fn handle_update(&self, update: Update) -> Result<(), BotError> {
         match update.update_kind {
             UpdateKind::NewMessage(message) => {
                 if let Some(message_text) = &message.text
@@ -97,7 +111,7 @@ impl Bot {
                                     format!("/{}", command_text).yellow()
                                 );
                                 command_handler(CommandContext::new(self.client.clone(), message))
-                                    .await;
+                                    .await?;
                                 break;
                             }
                         }
@@ -106,5 +120,7 @@ impl Bot {
             }
             _ => {}
         }
+
+        Ok(())
     }
 }

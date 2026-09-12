@@ -27,3 +27,4 @@ hashbrown.workspace = true
 log.workspace = true
 str_indices.workspace = true
 tokio.workspace = true
+thiserror.workspace = true

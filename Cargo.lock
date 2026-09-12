@@ -2103,6 +2103,7 @@ dependencies = [
  "hashbrown 0.17.1",
  "log",
  "str_indices",
+ "thiserror",
  "tokio",
  "xgram-proc",
  "xgram-telegram-api",
