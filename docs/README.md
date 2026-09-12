@@ -11,23 +11,30 @@ Powerful yet blazingly fast Telegram Bot API framework written in Rust, featurin
 Tokio-powered concurrency.
 </div>
 
-## Using
+## Usage
 
-### Creating bot
+### Creating a bot
 
-Open chat with [@BotFather](https://t.me/BotFather) in Telegram. Create a bot with `/newbot` command. In the end, you
-will receive token - a string like this `1234567890:ABCdefGH-AbCd318_someRandom`.  
-Don't share the token with anybody (token is like a password to control bot), don't store it directly in code and don't
-commit to VCS. Instead, create `.env` file and put it there:
+Open [@BotFather](https://t.me/BotFather) in Telegram. Use the `/newbot` command to create a bot and follow the prompts.
+At the end, you will receive a token – a string like `1234567890:ABCdefGH-AbCd318_someRandom`.  
+Don't share the token with anyone (treat the token like a password: anyone who has it can control your bot), don't store
+it directly in your code and don't commit to the VCS. Instead, create a `.env` file and put it there:
 
 ```dotenv
 TOKEN=1234567890:ABCdefGH-AbCd318_someRandom
 ```
 
-You might also want to configure log level (see `pretty_env_logger` docs):
+You might also want to configure the log level (see the `pretty_env_logger` documentation):
 
 ```dotenv
 RUST_LOG=info
+```
+
+Don't forget to exclude `.env` from the VCS:
+
+```gitignore
+# .gitignore
+*.env
 ```
 
 ### Adding dependencies
@@ -47,10 +54,10 @@ use xgram::prelude::*;
 
 #[tokio::main]
 async fn main() -> BotResult {
-    dotenv::dotenv().unwrap();
+    dotenv::dotenv().expect("failed to load .env");
     pretty_env_logger::init();
 
-    let token = std::env::var("TOKEN").unwrap();
+    let token = std::env::var("TOKEN").expect("TOKEN environment variable is not set");
     let config = BotConfig {
         ..Default::default()
     };
@@ -67,6 +74,7 @@ async fn command_start(ctx: CommandContext) -> CommandHandlerResult {
 }
 ```
 
-Run your bot and try sending `/start` command.
+Run your bot and try sending the `/start` command.
 
-Complete documentation available here: _\*crickets sound\*_
+Complete documentation is available here: _\*crickets sound\*_
+
