@@ -53,7 +53,7 @@ impl Bot {
         }
     }
 
-    /// Registers new command for bot.
+    /// Registers a new bot's command.
     /// # Example
     /// ```rust,ignore
     /// use xgram::prelude::*;
@@ -94,7 +94,7 @@ impl Bot {
     /// Consumes the `Bot` instance and runs the main loop.
     ///
     /// Please note, that this function returns `!` (never type) wrapped in
-    /// `Result`, which may require nightly toolchain or explicit
+    /// `Result`, which may require a nightly toolchain or an explicit
     /// `#![feature(never_type)]`
     ///
     /// See: https://doc.rust-lang.org/std/primitive.never.html
