@@ -35,13 +35,13 @@ xgram-utils = { path = "crates/xgram-utils", version = "=0.1.0" }
 
 colored = "3.1.1"
 hashbrown = "0.17.1"
-log = "0.4.29"
-reqwest = { version = "0.13.3", features = ["json"] }
-serde = { version = "1.0.228", features = ["derive"] }
-serde_json = "1.0.150"
-serde_with = "3.20.0"
-smallvec = { version = "1.15.1", features = ["serde"] } # TODO: We might want to update to 2.x.x when it becomes stable
-syn = { version = "2.0.117", features = ["full"] }
-thiserror = "2.0.18"
-tokio = { version = "1.52.3", default-features = false, features = ["time"] }
-quote = "1.0.45"
+log = "0.4.34"
+reqwest = { version = "0.13.5", features = ["json"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.151"
+serde_with = "3.23.0"
+smallvec = { version = "1.16.1", features = ["serde"] } # TODO: We might want to update to 2.x.x when it becomes stable
+syn = { version = "3.0.5", features = ["full"] }
+thiserror = "2.0.20"
+tokio = { version = "1.53.1", default-features = false, features = ["time"] }
+quote = "1.0.47"
