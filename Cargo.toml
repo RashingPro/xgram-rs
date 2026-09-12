@@ -8,7 +8,6 @@ description = "Powerful yet blazingly fast Telegram Bot API framework written in
 license = "MIT"
 readme = "docs/README.md"
 documentation = "https://github.com/RashingPro/xgram-rs"
-homepage = "https://github.com/RashingPro/xgram-rs"
 repository = "https://github.com/RashingPro/xgram-rs"
 authors = ["RashingPro"]
 keywords = ["telegram", "bot", "telegram-bot-api", "framework"]
