@@ -78,3 +78,49 @@ Run your bot and try sending the `/start` command.
 
 Complete documentation is available here: _\*crickets sound\*_
 
+## Advanced usage
+
+### Bypassing regional censorship
+
+In some countries and regions, Telegram API endpoints may be blocked by local authorities. Because they are just HTTP
+endpoints, you can't use MTProto proxy to bypass the restrictions. As a solution, you can use Cloudflare Workers along
+with the `base_api_url` config option:
+
+Cloudflare Worker code example:
+
+```js
+export default {
+    async fetch(request, env, ctx) {
+        const url = new URL(request.url);
+        url.host = "api.telegram.org";
+
+        const newRequest = new Request(url.toString(), {
+            method: request.method,
+            headers: request.headers,
+            body: request.body,
+            redirect: "manual"
+        });
+
+        return fetch(newRequest);
+    }
+};
+```
+
+Bot configuration:
+
+```rust
+#[tokio::main]
+async fn main() -> BotResult {
+    let token = "my-awesome-token";
+    let config = BotConfig {
+        base_api_url: "https://my-cool-worker.my-badass-username.workers.dev/", // URL must include trailing slash
+        ..Default::default()
+    };
+
+    let mut bot = Bot::new(token, config);
+    bot.run().await
+}
+```
+
+> [!CAUTION]
+> Please remember that without additional configuration, your Cloudflare Worker is publicly accessible to anyone.
