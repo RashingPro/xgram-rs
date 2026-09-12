@@ -24,6 +24,12 @@ commit to VCS. Instead, create `.env` file and put it there:
 TOKEN=1234567890:ABCdefGH-AbCd318_someRandom
 ```
 
+You might also want to configure log level (see `pretty_env_logger` docs):
+
+```dotenv
+RUST_LOG=info
+```
+
 ### Adding dependencies
 
 ```toml
