@@ -4,6 +4,7 @@ use colored::Colorize;
 use hashbrown::HashMap;
 use log::{error, trace};
 use std::sync::Arc;
+use str_indices::utf16;
 use xgram_telegram_api::client::TelegramApiClient;
 use xgram_telegram_api::types::message::entity::MessageEntityType;
 use xgram_telegram_api::types::update::{Update, UpdateKind};
@@ -72,8 +73,18 @@ impl Bot {
                 {
                     for entity in entities {
                         if let MessageEntityType::BotCommand = entity.entity_type {
-                            let command_text = &message_text[entity.offset as usize + 1
-                                ..(entity.offset + entity.length) as usize];
+                            let start = utf16::to_byte_idx(message_text, entity.offset as usize);
+                            let end = utf16::to_byte_idx(
+                                message_text,
+                                (entity.offset + entity.length) as usize
+                            );
+
+                            let command_text = message_text
+                                .get(start..end)
+                                .and_then(|s| s.strip_prefix('/'))
+                                .expect(
+                                    "Message text slicing error. This is a bug - please report!"
+                                );
                             if let Some(command_handler) = self.commands.get(command_text) {
                                 trace!(
                                     "Handling command {}",

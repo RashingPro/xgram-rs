@@ -25,4 +25,5 @@ xgram-utils.workspace = true
 colored.workspace = true
 hashbrown.workspace = true
 log.workspace = true
+str_indices.workspace = true
 tokio.workspace = true
