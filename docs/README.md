@@ -84,7 +84,7 @@ Complete documentation is available here: _\*crickets sound\*_
 
 In some countries and regions, Telegram API endpoints may be blocked by local authorities. Because they are just HTTP
 endpoints, you can't use MTProto proxy to bypass the restrictions. As a solution, you can use Cloudflare Workers along
-with the `base_api_url` config option:
+with the `api_base_url` config option:
 
 Cloudflare Worker code example:
 
@@ -113,7 +113,7 @@ Bot configuration:
 async fn main() -> BotResult {
     let token = "my-awesome-token";
     let config = BotConfig {
-        base_api_url: "https://my-cool-worker.my-badass-username.workers.dev/", // URL must include trailing slash
+        api_base_url: "https://my-cool-worker.my-badass-username.workers.dev/", // URL must include trailing slash
         ..Default::default()
     };
 
