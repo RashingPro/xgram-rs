@@ -34,7 +34,7 @@ impl UpdateReceiver for HttpUpdateReceiver {
                     .client
                     .make_request(&GetUpdatesEndpoint {
                         offset: Some(offset),
-                        timeout: Some(self.config.updates_http_polling_timeout),
+                        timeout: Some(self.config.http_updates_polling_timeout),
                         ..Default::default()
                     })
                     .await;
