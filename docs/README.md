@@ -37,10 +37,7 @@ tokio = { version = "...", features = ["rt-multi-thread", "macros"] }
 ### Hello World Bot
 
 ```rust
-use xgram::bot::Bot;
-use xgram::command::context::CommandContext;
-use xgram::proc::command_handler;
-use xgram::utils::config::BotConfig;
+use xgram::prelude::*;
 
 #[tokio::main]
 async fn main() {
