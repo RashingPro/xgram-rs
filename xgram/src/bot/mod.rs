@@ -30,7 +30,10 @@ impl Bot {
 
     pub fn register_command(&mut self, trigger: String, handler: CommandHandler) {
         if self.commands.contains_key(&trigger) {
-            panic!("command {} already registered", format!("/{}", trigger).yellow());
+            panic!(
+                "command {} already registered",
+                format!("/{}", trigger).yellow()
+            );
         }
         self.commands.insert(trigger, handler);
     }
@@ -42,18 +45,24 @@ impl Bot {
         while let Some(update) = update_receiver.recv().await {
             match update {
                 Ok(update) => {
-                    trace!(target: "main_loop","Received update: {:#?}", update);
+                    trace!(target: "main_loop", "Received update: {:#?}", update);
                     if let UpdateKind::NewMessage(message) = update.update_kind
                         && let Some(message_text) = &message.text
                         && let Some(entities) = &message.entities
                     {
                         for entity in entities {
                             if let MessageEntityType::BotCommand = entity.entity_type {
-                                let command_text =
-                                    &message_text[entity.offset as usize + 1..(entity.offset + entity.length) as usize];
+                                let command_text = &message_text[entity.offset as usize + 1
+                                    ..(entity.offset + entity.length) as usize];
                                 if let Some(command_handler) = self.commands.get(command_text) {
-                                    trace!("Handling command {}", format!("/{}", command_text).yellow());
-                                    tokio::spawn(command_handler(CommandContext::new(self.client.clone(), message)));
+                                    trace!(
+                                        "Handling command {}",
+                                        format!("/{}", command_text).yellow()
+                                    );
+                                    tokio::spawn(command_handler(CommandContext::new(
+                                        self.client.clone(),
+                                        message
+                                    )));
                                     break;
                                 }
                             }
