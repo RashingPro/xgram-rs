@@ -14,7 +14,7 @@ keywords = ["telegram", "bot", "telegram-bot-api", "framework"]
 categories = ["api-bindings"]
 
 edition = "2024"
-rust-version = "1.94.1"
+rust-version = "1.88"
 
 [workspace.lints.clippy]
 all = { level = "deny", priority = -1 }
