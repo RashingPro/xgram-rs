@@ -221,3 +221,56 @@ where
 
     Ok(ReplyToMessage::Complete(Some(Box::new(message))))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+    use std::assert_matches;
+
+    #[test]
+    fn message_reply_to_1() {
+        let json = json!(
+            {
+                "message_id": 1,
+                "date": 123,
+                "chat": {
+                    "id": 456,
+                    "type": "private",
+                }
+            }
+        );
+
+        let message: Message = serde_json::from_value(json).unwrap();
+        assert_matches!(message.reply_to_message, ReplyToMessage::Complete(None));
+    }
+
+    #[test]
+    fn message_reply_to_2() {
+        let json = json!(
+            {
+                "message_id": 1,
+                "date": 456,
+                "chat": {
+                    "id": 789,
+                    "type": "private"
+                },
+                "reply_to_message": {
+                    "message_id": 2,
+                    "date": 123,
+                    "chat": {
+                        "id": 456,
+                        "type": "private"
+                    }
+                }
+            }
+        );
+
+        let message: Message = serde_json::from_value(json).unwrap();
+        assert_matches!(message.reply_to_message, ReplyToMessage::Complete(Some(..)));
+        let ReplyToMessage::Complete(Some(reply_to)) = message.reply_to_message else {
+            unreachable!()
+        };
+        assert_matches!(reply_to.reply_to_message, ReplyToMessage::Truncated);
+    }
+}
