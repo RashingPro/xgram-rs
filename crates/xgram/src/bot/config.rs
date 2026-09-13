@@ -4,6 +4,9 @@ use xgram_utils::config::BotConfig;
 
 pub struct XgramConfig {
     pub bot_config: BotConfig,
+    /// Allows you to choose `UpdateReceiver`. You can use
+    /// `update_receiver_factory!(UpdateReceiverStruct)` macro. Defaults to
+    /// `update_receiver_factory!(HttpUpdateReceiver)`.
     pub update_receiver: UpdateReceiverFactory
 }
 
