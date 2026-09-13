@@ -1,7 +1,9 @@
 //! Main struct and managing logic.
 
+pub mod config;
 pub mod error;
 
+use crate::bot::config::XgramConfig;
 use crate::bot::error::{BotError, BotResult};
 use crate::command::context::CommandContext;
 use crate::command::{CommandHandler, CommandHandlerFuture};
@@ -14,9 +16,7 @@ use xgram_telegram_api::client::TelegramApiClient;
 use xgram_telegram_api::types::message::entity::MessageEntityType;
 use xgram_telegram_api::types::update::{Update, UpdateKind};
 use xgram_telegram_api::update_receiver::UpdateReceiver;
-use xgram_telegram_api::update_receiver::http::HttpUpdateReceiver;
-use xgram_utils::config::BotConfig;
-use xgram_utils::types::{BotConfigArc, TokenArc};
+use xgram_utils::types::TokenArc;
 
 /// Main framework's struct.
 /// # Example
@@ -34,21 +34,28 @@ use xgram_utils::types::{BotConfigArc, TokenArc};
 /// }
 /// ```
 pub struct Bot {
-    config: BotConfigArc,
     client: TelegramApiClient,
+    update_receiver: Box<dyn UpdateReceiver>,
     commands: HashMap<String, CommandHandler>
 }
 
 impl Bot {
-    pub fn new(token: impl Into<String>, config: BotConfig) -> Self {
+    pub fn new(token: impl Into<String>, config: XgramConfig) -> Self {
         let token = token.into();
 
         let token: TokenArc = Arc::from(token);
-        let config = Arc::new(config);
+        let XgramConfig {
+            bot_config,
+            update_receiver
+        } = config;
+
+        let bot_config = Arc::new(bot_config);
+
+        let client = TelegramApiClient::new(bot_config.clone(), token.clone());
 
         Self {
-            config: config.clone(),
-            client: TelegramApiClient::new(config.clone(), token.clone()),
+            client: client.clone(),
+            update_receiver: update_receiver(bot_config.clone(), client.clone()),
             commands: HashMap::new()
         }
     }
@@ -99,20 +106,21 @@ impl Bot {
     ///
     /// See: https://doc.rust-lang.org/std/primitive.never.html
     pub async fn run(self) -> BotResult {
-        let update_receiver = HttpUpdateReceiver::new(self.config.clone(), self.client.clone());
-        let mut update_receiver = update_receiver.spawn();
-
         info!("Running update polling");
 
-        let slf = Arc::new(self);
+        let mut update_receiver = self.update_receiver.spawn();
+
+        let commands = Arc::new(self.commands);
+
         while let Some(update) = update_receiver.recv().await {
             match update {
                 Ok(update) => {
                     trace!(target: "main_loop", "Received update: {:#?}", update);
                     {
-                        let slf = slf.clone();
+                        let client = self.client.clone();
+                        let commands = commands.clone();
                         tokio::spawn(async move {
-                            match slf.handle_update(update).await {
+                            match Self::handle_update(client, update, commands).await {
                                 Ok(_) => {
                                     trace!(target: "main_loop", "Successfully handled update");
                                 }
@@ -131,7 +139,11 @@ impl Bot {
     }
 
     #[allow(clippy::single_match, reason = "temporary")] // TODO: remove when more update handlers are present
-    async fn handle_update(&self, update: Update) -> Result<(), BotError> {
+    async fn handle_update(
+        client: TelegramApiClient,
+        update: Update,
+        commands: Arc<HashMap<String, CommandHandler>>
+    ) -> Result<(), BotError> {
         match update.update_kind {
             UpdateKind::NewMessage(message) => {
                 if let Some(message_text) = &message.text
@@ -151,12 +163,12 @@ impl Bot {
                                 .expect(
                                     "Message text slicing error. This is a bug - please report!"
                                 );
-                            if let Some(command_handler) = self.commands.get(command_text) {
+                            if let Some(command_handler) = commands.get(command_text) {
                                 trace!(
                                     "Handling command {}",
                                     format!("/{}", command_text).yellow()
                                 );
-                                command_handler(CommandContext::new(self.client.clone(), message))
+                                command_handler(CommandContext::new(client.clone(), message))
                                     .await?;
                                 break;
                             }
