@@ -3,7 +3,7 @@ resolver = "3"
 members = ["crates/*"]
 
 [workspace.package]
-version = "0.2.0"
+version = "0.3.0-canary.1"
 description = "Powerful yet blazingly fast Telegram Bot API framework written in Rust, featuring advanced abstractions and Tokio-powered concurrency."
 license = "MIT"
 readme = "docs/README.md"
@@ -36,9 +36,9 @@ lto = true
 codegen-units = 1
 
 [workspace.dependencies]
-xgram-proc = { path = "crates/xgram-proc", version = "=0.2.0" }
-xgram-telegram-api = { path = "crates/xgram-telegram-api", version = "=0.2.0" }
-xgram-utils = { path = "crates/xgram-utils", version = "=0.2.0" }
+xgram-proc = { path = "crates/xgram-proc", version = "=0.3.0-canary.1" }
+xgram-telegram-api = { path = "crates/xgram-telegram-api", version = "=0.3.0-canary.1" }
+xgram-utils = { path = "crates/xgram-utils", version = "=0.3.0-canary.1" }
 
 tokio = { version = "1.53.1", default-features = false, features = ["time"] }
 reqwest = { version = "0.13.5", features = ["json"] }
