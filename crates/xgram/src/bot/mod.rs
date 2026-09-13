@@ -147,9 +147,9 @@ impl Bot {
         match update.update_kind {
             UpdateKind::NewMessage(message) => {
                 if let Some(message_text) = &message.text
-                    && let Some(entities) = &message.entities
+                    && !message.entities.is_empty()
                 {
-                    for entity in entities {
+                    for entity in &message.entities {
                         if let MessageEntityType::BotCommand = entity.entity_type {
                             let start = utf16::to_byte_idx(message_text, entity.offset as usize);
                             let end = utf16::to_byte_idx(
