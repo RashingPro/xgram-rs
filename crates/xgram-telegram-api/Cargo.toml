@@ -27,4 +27,4 @@ serde_json.workspace = true
 serde_with.workspace = true
 smallvec = { workspace = true, features = ["serde"] }
 thiserror.workspace = true
-tokio = { workspace = true, default-features = false }
+tokio = { workspace = true, default-features = false, features = ["parking_lot"] }
