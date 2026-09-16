@@ -3,7 +3,7 @@
 pub mod config;
 pub mod error;
 
-use crate::bot::config::XgramConfig;
+use crate::bot::config::BotConfig;
 use crate::bot::error::{BotError, BotResult};
 use crate::command::context::CommandContext;
 use crate::command::{CommandHandler, CommandHandlerFuture};
@@ -16,6 +16,7 @@ use xgram_telegram_api::client::TelegramApiClient;
 use xgram_telegram_api::types::message::entity::MessageEntityType;
 use xgram_telegram_api::types::update::{Update, UpdateKind};
 use xgram_telegram_api::update_receiver::UpdateReceiver;
+use xgram_utils::config::InnerConfig;
 use xgram_utils::types::TokenArc;
 
 /// Main framework's struct.
@@ -40,22 +41,29 @@ pub struct Bot {
 }
 
 impl Bot {
-    pub fn new(token: impl Into<String>, config: XgramConfig) -> Self {
+    pub fn new(token: impl Into<String>, config: BotConfig) -> Self {
         let token = token.into();
 
         let token: TokenArc = Arc::from(token);
-        let XgramConfig {
-            bot_config,
+
+        let BotConfig {
+            api_base_url,
+            updates_channel_capacity,
+            http_updates_polling_timeout,
             update_receiver
         } = config;
+        let inner_config = InnerConfig {
+            api_base_url,
+            updates_channel_capacity,
+            http_updates_polling_timeout
+        };
+        let inner_config = Arc::new(inner_config);
 
-        let bot_config = Arc::new(bot_config);
-
-        let client = TelegramApiClient::new(bot_config.clone(), token.clone());
+        let client = TelegramApiClient::new(inner_config.clone(), token.clone());
 
         Self {
             client: client.clone(),
-            update_receiver: update_receiver(bot_config.clone(), client.clone()),
+            update_receiver: update_receiver(inner_config.clone(), client.clone()),
             commands: HashMap::new()
         }
     }

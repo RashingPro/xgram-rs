@@ -8,15 +8,15 @@ use std::time::Duration;
 use tokio::sync::mpsc;
 use tokio::sync::mpsc::Receiver;
 use tokio::time::sleep;
-use xgram_utils::types::BotConfigArc;
+use xgram_utils::types::InnerConfigArc;
 
 pub struct HttpUpdateReceiver {
-    config: BotConfigArc,
+    config: InnerConfigArc,
     client: TelegramApiClient
 }
 
 impl HttpUpdateReceiver {
-    pub fn new(config: BotConfigArc, client: TelegramApiClient) -> Self {
+    pub fn new(config: InnerConfigArc, client: TelegramApiClient) -> Self {
         Self { config, client }
     }
 }

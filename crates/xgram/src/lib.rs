@@ -13,10 +13,9 @@ pub use xgram_utils as utils;
 /// syntax: `use xgram::prelude::*`
 pub mod prelude {
     pub use crate::bot::Bot;
-    pub use crate::bot::config::XgramConfig;
+    pub use crate::bot::config::BotConfig;
     pub use crate::bot::error::BotResult;
     pub use crate::command::context::CommandContext;
     pub use crate::command::error::CommandHandlerResult;
     pub use crate::proc::*;
-    pub use crate::utils::config::BotConfig;
 }
