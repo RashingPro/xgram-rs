@@ -48,13 +48,13 @@ impl Bot {
 
         let BotConfig {
             api_base_url,
-            updates_channel_capacity,
+            update_buffer_capacity,
             http_updates_polling_timeout,
             update_receiver
         } = config;
         let inner_config = InnerConfig {
             api_base_url,
-            updates_channel_capacity,
+            update_buffer_capacity,
             http_updates_polling_timeout
         };
         let inner_config = Arc::new(inner_config);

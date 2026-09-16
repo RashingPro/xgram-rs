@@ -23,7 +23,7 @@ impl HttpUpdateReceiver {
 
 impl UpdateReceiver for HttpUpdateReceiver {
     fn spawn(self: Box<Self>) -> Receiver<Result<Update, TelegramApiError>> {
-        let (tx, rx) = mpsc::channel(self.config.updates_channel_capacity);
+        let (tx, rx) = mpsc::channel(self.config.update_buffer_capacity);
 
         tokio::spawn(async move {
             let mut offset = 0;

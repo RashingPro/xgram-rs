@@ -21,7 +21,7 @@ impl Default for BotConfig {
     fn default() -> Self {
         Self {
             api_base_url: "https://api.telegram.org/",
-            updates_channel_capacity: 32,
+            update_buffer_capacity: 32,
             http_updates_polling_timeout: 30,
             update_receiver: update_receiver_factory!(HttpUpdateReceiver)
         }
