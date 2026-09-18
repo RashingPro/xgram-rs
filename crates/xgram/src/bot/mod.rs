@@ -109,8 +109,7 @@ impl Bot {
     /// Consumes the `Bot` instance and runs the main loop.
     ///
     /// Please note, that this function returns `!` (never type) wrapped in
-    /// `Result`, which may require a nightly toolchain or an explicit
-    /// `#![feature(never_type)]`
+    /// `Result`, which currently requires a nightly toolchain.
     ///
     /// See: https://doc.rust-lang.org/std/primitive.never.html
     pub async fn run(self) -> BotResult {
