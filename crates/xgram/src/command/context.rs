@@ -14,7 +14,7 @@ impl CommandContext {
         Self { client, message }
     }
 
-    pub async fn reply(self, text: impl Into<String>) -> Result<Message, TelegramApiError> {
+    pub async fn reply(&self, text: impl Into<String>) -> Result<Message, TelegramApiError> {
         let text = text.into();
 
         self.client
