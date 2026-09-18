@@ -114,7 +114,7 @@ impl Bot {
     ///
     /// See: https://doc.rust-lang.org/std/primitive.never.html
     pub async fn run(self) -> BotResult {
-        info!("Running update polling");
+        info!(target: "xgram::main_loop", "Running update polling");
 
         let mut update_receiver = self.update_receiver.spawn();
 
@@ -123,23 +123,23 @@ impl Bot {
         while let Some(update) = update_receiver.recv().await {
             match update {
                 Ok(update) => {
-                    trace!(target: "main_loop", "Received update: {:#?}", update);
+                    trace!(target: "xgram::main_loop", "Received update: {:#?}", update);
                     {
                         let client = self.client.clone();
                         let commands = commands.clone();
                         tokio::spawn(async move {
                             match Self::handle_update(client, update, commands).await {
                                 Ok(_) => {
-                                    trace!(target: "main_loop", "Successfully handled update");
+                                    trace!(target: "xgram::main_loop", "Successfully handled update");
                                 }
                                 Err(err) => {
-                                    error!(target: "main_loop", "Failed to handle update: {}", err);
+                                    error!(target: "xgram::main_loop", "Failed to handle update: {}", err);
                                 }
                             }
                         });
                     }
                 }
-                Err(err) => error!(target: "main_loop", "{}", err)
+                Err(err) => error!(target: "xgram::main_loop", "{}", err)
             }
         }
 
@@ -173,6 +173,7 @@ impl Bot {
                                 );
                             if let Some(command_handler) = commands.get(command_text) {
                                 trace!(
+                                    target: "xgram::main_loop",
                                     "Handling command {}",
                                     format!("/{}", command_text).yellow()
                                 );

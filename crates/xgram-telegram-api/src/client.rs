@@ -27,14 +27,14 @@ impl TelegramApiClient {
         R: DeserializeOwned + Debug,
         T: TelegramApiEndpoint<R>
     {
-        trace!("Making request {:#?}", endpoint);
+        trace!(target: "xgram::telegram_api_client", "Making request {:#?}", endpoint);
         let request = self
             .client
             .post(endpoint.craft_url(&self.token, self.config.api_base_url))
             .json(endpoint)
             .send();
         let response: TelegramApiResponse<R> = request.await?.json().await?;
-        trace!("Got response from {:#?}: {:#?}", endpoint, response);
+        trace!(target: "xgram::telegram_api_client","Got response from {:#?}: {:#?}", endpoint, response);
         if !response.ok {
             return Err(TelegramApiError::NotSuccess(
                 response

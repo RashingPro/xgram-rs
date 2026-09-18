@@ -54,7 +54,7 @@ impl UpdateReceiver for HttpUpdateReceiver {
                                 match err {
                                     TrySendError::Full(update) => {
                                         if !did_warned_channel_is_full {
-                                            warn!(target: "update_receiver", "Update buffer is full. This is a soft warning and will not be emitted any more. See doc comment under `xgram::bot::config::BotConfig::update_buffer_capacity`");
+                                            warn!(target: "xgram::update_receiver", "Update buffer is full. This is a soft warning and will not be emitted any more. See doc comment under `xgram::bot::config::BotConfig::update_buffer_capacity`");
                                             did_warned_channel_is_full = true;
                                         }
 
@@ -80,7 +80,7 @@ impl UpdateReceiver for HttpUpdateReceiver {
                 };
             }
             error!(
-                target: "update_receiver",
+                target: "xgram::update_receiver",
                 "Update receiver loop finished, but it wasn't supposed to! It may be a bug - \
                  consider reporting."
             );
