@@ -39,21 +39,20 @@ codegen-units = 1
 xgram-proc = { path = "crates/xgram-proc", version = "=0.3.0-canary.1" }
 xgram-telegram-api = { path = "crates/xgram-telegram-api", version = "=0.3.0-canary.1" }
 xgram-utils = { path = "crates/xgram-utils", version = "=0.3.0-canary.1" }
-
-tokio = { version = "1.53.1", default-features = false, features = ["time"] }
-reqwest = { version = "0.13.5", features = ["json"] }
+tokio = "1.53.1"
+reqwest = "0.13.5"
 
 # Serde
-serde = { version = "1.0.229", features = ["derive"] }
+serde = "1.0.229"
 serde_json = "1.0.151"
 serde_with = "3.23.0"
 
 # Data structures
 hashbrown = "0.17.1"
-smallvec = { version = "1.16.1", features = ["serde"] } # TODO: We might want to update to 2.x.x when it becomes stable
+smallvec = "1.16.1" # TODO: We might want to update to 2.x.x when it becomes stable
 
 # Macro
-syn = { version = "3.0.5", features = ["full"] }
+syn = "3.0.5"
 quote = "1.0.47"
 
 # Utils

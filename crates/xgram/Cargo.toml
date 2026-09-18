@@ -26,5 +26,5 @@ colored.workspace = true
 hashbrown.workspace = true
 log.workspace = true
 str_indices.workspace = true
-tokio.workspace = true
+tokio = { workspace = true, default-features = false }
 thiserror.workspace = true
