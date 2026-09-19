@@ -24,5 +24,7 @@ jobs:
       - name: Build
         if: github.ref_name == 'main'
         run: cargo build --release
+      - name: Cargo Audit
+        run: cargo audit
       - name: Run tests
         run: cargo test
