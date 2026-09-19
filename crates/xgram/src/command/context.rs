@@ -14,6 +14,18 @@ impl CommandContext {
         Self { client, message }
     }
 
+    pub async fn send(&self, text: impl Into<String>) -> Result<Message, TelegramApiError> {
+        let text = text.into();
+
+        self.client
+            .make_request(&SendMessageEndpoint {
+                chat_id: self.message.chat.id,
+                text,
+                ..Default::default()
+            })
+            .await
+    }
+
     pub async fn reply(&self, text: impl Into<String>) -> Result<Message, TelegramApiError> {
         let text = text.into();
 
