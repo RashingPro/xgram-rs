@@ -42,18 +42,20 @@ Don't forget to exclude `.env` from the VCS:
 ```toml
 [dependencies]
 xgram = "..."
-dotenv = "..."
-pretty_env_logger = "..." # You can use whatever logger you like
+dotenv = "..." # Optional, but highly recommended
+pretty_env_logger = "..." # Optional, you can use whatever logger you like
+pretty_unwrap = "..." # Optional
 tokio = { version = "...", features = ["rt-multi-thread", "macros"] }
 ```
 
 ### Hello World Bot
 
 ```rust
+use pretty_unwrap::UnwrapPretty;
 use xgram::prelude::*;
 
 #[tokio::main]
-async fn main() -> BotResult {
+async fn main() {
     dotenv::dotenv().expect("failed to load .env");
     pretty_env_logger::init();
 
@@ -64,7 +66,7 @@ async fn main() -> BotResult {
 
     let mut bot: Bot = Bot::new(token, config);
     bot.register_command("start", command_start);
-    bot.run().await
+    bot.run().await.unwrap_pretty();
 }
 
 #[command_handler]
@@ -110,7 +112,7 @@ Bot configuration:
 
 ```rust
 #[tokio::main]
-async fn main() -> BotResult {
+async fn main() {
     let token = "my-awesome-token";
     let config = BotConfig {
         api_base_url: "https://my-cool-worker.my-badass-username.workers.dev/", // URL must include trailing slash
@@ -118,7 +120,7 @@ async fn main() -> BotResult {
     };
 
     let mut bot: Bot = Bot::new(token, config);
-    bot.run().await
+    bot.run().await.unwrap_pretty();
 }
 ```
 
