@@ -1,5 +1,3 @@
-#![feature(decl_macro)]
-
 pub mod client;
 pub mod endpoints;
 pub mod error;

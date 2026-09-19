@@ -1,6 +1,3 @@
-use xgram_telegram_api::update_receiver::http::HttpUpdateReceiver;
-use xgram_telegram_api::update_receiver::{UpdateReceiverFactory, update_receiver_factory};
-
 pub struct BotConfig {
     /// Base URL for Telegram API. Must include trailing slash. Defaults to `https://api.telegram.org/`.
     pub api_base_url: &'static str,
@@ -20,11 +17,7 @@ pub struct BotConfig {
     pub update_buffer_capacity: usize,
     /// Timeout for HTTP long-polling. Only affects `HttpUpdateReceiver`.
     /// Defaults to 30.
-    pub http_updates_polling_timeout: u8,
-    /// Allows you to choose `UpdateReceiver`. You can use
-    /// `update_receiver_factory!(UpdateReceiverStruct)` macro. Defaults to
-    /// `update_receiver_factory!(HttpUpdateReceiver)`.
-    pub update_receiver: UpdateReceiverFactory
+    pub http_updates_polling_timeout: u8
 }
 
 impl Default for BotConfig {
@@ -32,8 +25,7 @@ impl Default for BotConfig {
         Self {
             api_base_url: "https://api.telegram.org/",
             update_buffer_capacity: 32,
-            http_updates_polling_timeout: 30,
-            update_receiver: update_receiver_factory!(HttpUpdateReceiver)
+            http_updates_polling_timeout: 30
         }
     }
 }

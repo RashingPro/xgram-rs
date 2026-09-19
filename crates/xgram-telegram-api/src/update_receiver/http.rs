@@ -17,14 +17,12 @@ pub struct HttpUpdateReceiver {
     client: TelegramApiClient
 }
 
-impl HttpUpdateReceiver {
-    pub fn new(config: InnerConfigArc, client: TelegramApiClient) -> Self {
+impl UpdateReceiver for HttpUpdateReceiver {
+    fn new(config: InnerConfigArc, client: TelegramApiClient) -> Self {
         Self { config, client }
     }
-}
 
-impl UpdateReceiver for HttpUpdateReceiver {
-    fn spawn(self: Box<Self>) -> Receiver<Result<Update, TelegramApiError>> {
+    fn spawn(self) -> Receiver<Result<Update, TelegramApiError>> {
         let (tx, rx) = mpsc::channel(self.config.update_buffer_capacity);
 
         tokio::spawn(async move {

@@ -7,16 +7,7 @@ use tokio::sync::mpsc;
 use xgram_utils::types::InnerConfigArc;
 
 pub trait UpdateReceiver {
-    fn spawn(self: Box<Self>) -> mpsc::Receiver<Result<Update, TelegramApiError>>;
-}
+    fn new(config: InnerConfigArc, client: TelegramApiClient) -> Self;
 
-pub type UpdateReceiverFactory =
-    Box<dyn FnOnce(InnerConfigArc, TelegramApiClient) -> Box<dyn UpdateReceiver>>;
-
-pub macro update_receiver_factory($receiver:ty) {
-    Box::new(
-        |config: InnerConfigArc, client: TelegramApiClient| -> Box<dyn UpdateReceiver> {
-            Box::new(<$receiver>::new(config, client))
-        }
-    )
+    fn spawn(self) -> mpsc::Receiver<Result<Update, TelegramApiError>>;
 }

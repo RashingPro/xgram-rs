@@ -10,14 +10,16 @@ use crate::command::{CommandHandler, CommandHandlerFuture};
 use colored::Colorize;
 use hashbrown::HashMap;
 use log::{error, info, trace, warn};
+use std::marker::PhantomData;
 use std::sync::Arc;
 use str_indices::utf16;
 use xgram_telegram_api::client::TelegramApiClient;
 use xgram_telegram_api::types::message::entity::MessageEntityType;
 use xgram_telegram_api::types::update::{Update, UpdateKind};
 use xgram_telegram_api::update_receiver::UpdateReceiver;
+use xgram_telegram_api::update_receiver::http::HttpUpdateReceiver;
 use xgram_utils::config::InnerConfig;
-use xgram_utils::types::TokenArc;
+use xgram_utils::types::{InnerConfigArc, TokenArc};
 
 /// Main framework's struct.
 /// # Example
@@ -34,13 +36,20 @@ use xgram_utils::types::TokenArc;
 ///     bot.run().await
 /// }
 /// ```
-pub struct Bot {
+pub struct Bot<U = HttpUpdateReceiver>
+where
+    U: UpdateReceiver
+{
     client: TelegramApiClient,
-    update_receiver: Box<dyn UpdateReceiver>,
-    commands: HashMap<String, CommandHandler>
+    commands: HashMap<String, CommandHandler>,
+    inner_config: InnerConfigArc,
+    _u: PhantomData<U>
 }
 
-impl Bot {
+impl<U> Bot<U>
+where
+    U: UpdateReceiver
+{
     pub fn new(token: impl Into<String>, config: BotConfig) -> Self {
         let token = token.into();
 
@@ -49,8 +58,7 @@ impl Bot {
         let BotConfig {
             api_base_url,
             update_buffer_capacity,
-            http_updates_polling_timeout,
-            update_receiver
+            http_updates_polling_timeout
         } = config;
         let inner_config = InnerConfig {
             api_base_url,
@@ -63,8 +71,9 @@ impl Bot {
 
         Self {
             client: client.clone(),
-            update_receiver: update_receiver(inner_config.clone(), client.clone()),
-            commands: HashMap::new()
+            commands: HashMap::new(),
+            inner_config,
+            _u: Default::default()
         }
     }
 
@@ -115,9 +124,9 @@ impl Bot {
     pub async fn run(self) -> BotResult {
         info!(target: "xgram::main_loop", "Running update polling");
 
-        let mut update_receiver = self.update_receiver.spawn();
-
+        let mut update_receiver = U::new(self.inner_config.clone(), self.client.clone()).spawn();
         let commands = Arc::new(self.commands);
+        drop(self.inner_config);
 
         while let Some(update) = update_receiver.recv().await {
             match update {
