@@ -11,6 +11,7 @@ pub struct MessageEntity {
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
+#[non_exhaustive]
 pub enum MessageEntityType {
     Mention,
     Hashtag,

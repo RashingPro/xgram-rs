@@ -10,6 +10,7 @@ pub struct Update {
 
 /// See: https://core.telegram.org/bots/api#update
 #[derive(Debug)]
+#[non_exhaustive]
 pub enum UpdateKind {
     NewMessage(Message),
     EditedMessage(Message),
