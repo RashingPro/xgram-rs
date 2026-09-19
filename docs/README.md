@@ -13,6 +13,9 @@ Tokio-powered concurrency.
 
 ## Usage
 
+> [!NOTE]
+> The nightly toolchain is required as some features that required for the project are not stabilized yet.
+
 ### Creating a bot
 
 Open [@BotFather](https://t.me/BotFather) in Telegram. Use the `/newbot` command to create a bot and follow the prompts.
