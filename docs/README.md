@@ -62,7 +62,7 @@ async fn main() -> BotResult {
         ..Default::default()
     };
 
-    let mut bot = Bot::new(token, config);
+    let mut bot: Bot = Bot::new(token, config);
     bot.register_command("start", command_start);
     bot.run().await
 }
@@ -117,7 +117,7 @@ async fn main() -> BotResult {
         ..Default::default()
     };
 
-    let mut bot = Bot::new(token, config);
+    let mut bot: Bot = Bot::new(token, config);
     bot.run().await
 }
 ```
