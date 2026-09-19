@@ -1,9 +1,10 @@
-name: "Push Checks"
+name: "Push/PR Checks"
 on:
   push:
     branches:
       - main
       - dev
+  pull_request:
 jobs:
   checks:
     runs-on: ubuntu-latest
