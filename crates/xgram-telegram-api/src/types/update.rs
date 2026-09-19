@@ -38,7 +38,8 @@ pub enum UpdateKind {
     ChatJoinRequest(()),     // TODO
     ChatBoostUpdated(()),    // TODO
     ChatBoostRemoved(()),    // TODO
-    ManagedBotUpdated(())    // TODO
+    ManagedBotUpdated(()),   // TODO
+    Unknown(String)
 }
 
 impl<'de> Deserialize<'de> for Update {
@@ -75,13 +76,14 @@ impl<'de> Deserialize<'de> for Update {
             (
                 $match_value:expr,
                 $update_body:ident,
+                $fallback_value:expr,
                 {
                     $($key:literal => $kind:path),* $(,)?
                 }
             ) => {
                 match $match_value {
                     $($key => $kind(serde_json::from_value(serde_json::Value::Object($update_body)).unwrap()),)*
-                    _ => return Err(serde::de::Error::custom(format!("unknown update type: {}", $match_value)))
+                    _ => $fallback_value
                 }
             };
         }
@@ -89,6 +91,7 @@ impl<'de> Deserialize<'de> for Update {
         let update_kind = update_body_match!(
             update_body_key.as_str(),
             update_body,
+            UpdateKind::Unknown(update_body_key),
             {
                 "message" => UpdateKind::NewMessage,
                 "edited_message" => UpdateKind::EditedMessage,

@@ -9,7 +9,7 @@ use crate::command::context::CommandContext;
 use crate::command::{CommandHandler, CommandHandlerFuture};
 use colored::Colorize;
 use hashbrown::HashMap;
-use log::{error, info, trace};
+use log::{error, info, trace, warn};
 use std::sync::Arc;
 use str_indices::utf16;
 use xgram_telegram_api::client::TelegramApiClient;
@@ -146,7 +146,6 @@ impl Bot {
         Err(BotError::UnreachableCodeReached)
     }
 
-    #[allow(clippy::single_match, reason = "temporary")] // TODO: remove when more update handlers are present
     async fn handle_update(
         client: TelegramApiClient,
         update: Update,
@@ -184,6 +183,9 @@ impl Bot {
                         }
                     }
                 }
+            }
+            UpdateKind::Unknown(key) => {
+                warn!(target: "xgram::main_loop", "Unknown update kind: `{key}`. This might be API miscoverage. Please consider reporting.");
             }
             _ => {}
         }
