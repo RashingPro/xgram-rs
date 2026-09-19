@@ -2172,7 +2172,7 @@ checksum = "1ffae5123b2d3fc086436f8834ae3ab053a283cfac8fe0a0b8eaae044768a4c4"
 
 [[package]]
 name = "xgram"
-version = "0.3.0-canary.1"
+version = "0.3.0"
 dependencies = [
  "colored",
  "hashbrown 0.17.1",
@@ -2187,7 +2187,7 @@ dependencies = [
 
 [[package]]
 name = "xgram-proc"
-version = "0.3.0-canary.1"
+version = "0.3.0"
 dependencies = [
  "quote",
  "syn 3.0.5",
@@ -2195,7 +2195,7 @@ dependencies = [
 
 [[package]]
 name = "xgram-telegram-api"
-version = "0.3.0-canary.1"
+version = "0.3.0"
 dependencies = [
  "log",
  "reqwest",
@@ -2210,7 +2210,7 @@ dependencies = [
 
 [[package]]
 name = "xgram-utils"
-version = "0.3.0-canary.1"
+version = "0.3.0"
 
 [[package]]
 name = "yoke"
