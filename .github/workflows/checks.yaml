@@ -17,9 +17,10 @@ jobs:
         run: |
           rustup toolchain install nightly --profile minimal --no-self-update
           rustup component add --toolchain nightly rustfmt clippy
-          cargo install cargo-audit cargo-nextest --locked
       - name: Rust cache
         uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - name: Install Dependencies
+        run: cargo install cargo-audit cargo-nextest --locked
       - name: Check formatting
         run: cargo fmt --check
       - name: Lint
