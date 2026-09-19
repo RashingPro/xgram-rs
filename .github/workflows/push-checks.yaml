@@ -1,0 +1,27 @@
+name: "Push Checks"
+on:
+  push:
+    branches:
+      - main
+      - canary
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup Rust
+        run: |
+          rustup toolchain install nightly --profile minimal --no-self-update
+          rustup component add --toolchain nightly rustfmt clippy
+      - name: Rust cache
+        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - name: Check formatting
+        run: cargo fmt --check
+      - name: Lint
+        run: cargo clippy
+      - name: Build
+        if: github.ref_name == 'main'
+        run: cargo build --release
+      - name: Run tests
+        run: cargo test
