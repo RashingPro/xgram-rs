@@ -39,6 +39,7 @@ codegen-units = 1
 xgram-proc = { path = "crates/xgram-proc", version = "=0.3.0" }
 xgram-telegram-api = { path = "crates/xgram-telegram-api", version = "=0.3.0" }
 xgram-utils = { path = "crates/xgram-utils", version = "=0.3.0" }
+
 tokio = "1.53.1"
 reqwest = "0.13.5"
 
@@ -60,3 +61,7 @@ colored = "3.1.1"
 log = "0.4.34"
 str_indices = "0.4.4"
 thiserror = "2.0.20"
+
+# Build Dependencies
+cargo-emit = "0.2.1"
+rustc_version = "0.4.1"

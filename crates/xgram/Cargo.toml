@@ -27,3 +27,7 @@ log.workspace = true
 str_indices.workspace = true
 thiserror.workspace = true
 tokio = { workspace = true, default-features = false, features = ["parking_lot"] }
+
+[build-dependencies]
+cargo-emit.workspace = true
+rustc_version.workspace = true
