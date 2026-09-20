@@ -17,7 +17,7 @@ use xgram_telegram_api::client::TelegramApiClient;
 use xgram_telegram_api::types::message::entity::MessageEntityType;
 use xgram_telegram_api::types::update::{Update, UpdateKind};
 use xgram_telegram_api::update_receiver::UpdateReceiver;
-use xgram_telegram_api::update_receiver::http::HttpUpdateReceiver;
+use xgram_telegram_api::update_receiver::long_polling::LongPollingUpdateReceiver;
 use xgram_utils::config::InnerConfig;
 use xgram_utils::types::{InnerConfigArc, TokenArc};
 
@@ -36,7 +36,7 @@ use xgram_utils::types::{InnerConfigArc, TokenArc};
 ///     bot.run().await
 /// }
 /// ```
-pub struct Bot<U = HttpUpdateReceiver>
+pub struct Bot<U = LongPollingUpdateReceiver>
 where
     U: UpdateReceiver
 {
@@ -58,7 +58,7 @@ where
         let BotConfig {
             api_base_url,
             update_buffer_capacity,
-            http_updates_polling_timeout
+            update_long_polling_timeout: http_updates_polling_timeout
         } = config;
         let inner_config = InnerConfig {
             api_base_url,

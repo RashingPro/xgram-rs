@@ -1,4 +1,4 @@
-pub mod http;
+pub mod long_polling;
 
 use crate::client::TelegramApiClient;
 use crate::error::TelegramApiError;

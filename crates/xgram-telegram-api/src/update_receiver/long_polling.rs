@@ -12,12 +12,12 @@ use tokio::sync::mpsc::error::TrySendError;
 use tokio::time::sleep;
 use xgram_utils::types::InnerConfigArc;
 
-pub struct HttpUpdateReceiver {
+pub struct LongPollingUpdateReceiver {
     config: InnerConfigArc,
     client: TelegramApiClient
 }
 
-impl UpdateReceiver for HttpUpdateReceiver {
+impl UpdateReceiver for LongPollingUpdateReceiver {
     fn new(config: InnerConfigArc, client: TelegramApiClient) -> Self {
         Self { config, client }
     }

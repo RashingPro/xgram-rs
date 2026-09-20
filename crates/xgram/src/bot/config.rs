@@ -19,9 +19,9 @@ pub struct BotConfig {
     /// See: [`tokio::sync::mpsc::channel`]
     pub update_buffer_capacity: usize,
     /// Timeout for HTTP long-polling. Only affects
-    /// [`crate::telegram_api::update_receiver::http::HttpUpdateReceiver`].
+    /// [`crate::telegram_api::update_receiver::long_polling::LongPollingUpdateReceiver`].
     /// Defaults to 30.
-    pub http_updates_polling_timeout: u8
+    pub update_long_polling_timeout: u8
 }
 
 impl Default for BotConfig {
@@ -29,7 +29,7 @@ impl Default for BotConfig {
         Self {
             api_base_url: "https://api.telegram.org/",
             update_buffer_capacity: 32,
-            http_updates_polling_timeout: 30
+            update_long_polling_timeout: 30
         }
     }
 }
