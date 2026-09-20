@@ -1,6 +1,6 @@
 pub struct BotConfig {
     /// Base URL for Telegram API. Must include trailing slash. Defaults to <`https://api.telegram.org/`>.
-    pub api_base_url: &'static str,
+    pub api_base_url: String,
     /// Capacity of the MPSC channel used by
     /// [`crate::telegram_api::update_receiver::UpdateReceiver`] as a local
     /// update buffer. When the buffer is full, the update receiver waits
@@ -27,7 +27,7 @@ pub struct BotConfig {
 impl Default for BotConfig {
     fn default() -> Self {
         Self {
-            api_base_url: "https://api.telegram.org/",
+            api_base_url: "https://api.telegram.org/".to_owned(),
             update_buffer_capacity: 32,
             update_long_polling_timeout: 30
         }

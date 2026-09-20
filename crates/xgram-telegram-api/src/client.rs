@@ -32,7 +32,7 @@ impl TelegramApiClient {
         trace!(target: "xgram::telegram_api_client", "Making request {:#?}", endpoint);
         let request = self
             .client
-            .post(endpoint.craft_url(&self.token, self.config.api_base_url))
+            .post(endpoint.craft_url(&self.token, &self.config.api_base_url))
             .json(endpoint)
             .send();
         let response: TelegramApiResponse<R> = request.await?.json().await?;

@@ -118,7 +118,7 @@ Bot configuration:
 async fn main() {
     let token = "my-awesome-token";
     let config = BotConfig {
-        api_base_url: "https://my-cool-worker.my-badass-username.workers.dev/", // URL must include trailing slash
+        api_base_url: "https://my-cool-worker.my-badass-username.workers.dev/".to_owned(), // URL must include trailing slash
         ..Default::default()
     };
 
