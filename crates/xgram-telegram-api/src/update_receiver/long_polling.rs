@@ -1,15 +1,19 @@
-use crate::client::TelegramApiClient;
-use crate::endpoints::get_updates::GetUpdatesEndpoint;
-use crate::error::TelegramApiError;
-use crate::types::update::Update;
-use crate::update_receiver::UpdateReceiver;
+use crate::{
+    client::TelegramApiClient,
+    endpoints::get_updates::GetUpdatesEndpoint,
+    error::TelegramApiError,
+    types::update::Update,
+    update_receiver::UpdateReceiver
+};
 use log::{error, warn};
-use std::cmp::max;
-use std::time::Duration;
-use tokio::sync::mpsc;
-use tokio::sync::mpsc::Receiver;
-use tokio::sync::mpsc::error::TrySendError;
-use tokio::time::sleep;
+use std::{cmp::max, time::Duration};
+use tokio::{
+    sync::{
+        mpsc,
+        mpsc::{Receiver, error::TrySendError}
+    },
+    time::sleep
+};
 use xgram_utils::types::InnerConfigArc;
 
 pub struct LongPollingUpdateReceiver {

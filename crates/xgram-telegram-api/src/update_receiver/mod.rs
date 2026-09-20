@@ -1,8 +1,6 @@
 pub mod long_polling;
 
-use crate::client::TelegramApiClient;
-use crate::error::TelegramApiError;
-use crate::types::update::Update;
+use crate::{client::TelegramApiClient, error::TelegramApiError, types::update::Update};
 use tokio::sync::mpsc;
 use xgram_utils::types::InnerConfigArc;
 

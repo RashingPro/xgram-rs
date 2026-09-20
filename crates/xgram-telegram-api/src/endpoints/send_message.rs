@@ -1,9 +1,11 @@
-use crate::endpoints::{TelegramApiEndpoint, craft_default_url};
-use crate::types::link_preview_options::LinkPreviewOptions;
-use crate::types::message::Message;
-use crate::types::message::entity::MessageEntity;
-use crate::types::message::reply_parameters::ReplyParameters;
-use crate::types::parse_mode::ParseMode;
+use crate::{
+    endpoints::{TelegramApiEndpoint, craft_default_url},
+    types::{
+        link_preview_options::LinkPreviewOptions,
+        message::{Message, entity::MessageEntity, reply_parameters::ReplyParameters},
+        parse_mode::ParseMode
+    }
+};
 use serde::Serialize;
 use serde_with::skip_serializing_none;
 use smallvec::SmallVec;

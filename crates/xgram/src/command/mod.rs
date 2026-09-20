@@ -3,8 +3,7 @@
 pub mod context;
 pub mod error;
 
-use crate::command::context::CommandContext;
-use crate::command::error::CommandHandlerResult;
+use crate::command::{context::CommandContext, error::CommandHandlerResult};
 use std::pin::Pin;
 
 pub type CommandHandlerFuture = Pin<Box<dyn Future<Output = CommandHandlerResult> + Send>>;

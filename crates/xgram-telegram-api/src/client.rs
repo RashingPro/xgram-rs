@@ -1,5 +1,7 @@
-use crate::endpoints::{TelegramApiEndpoint, TelegramApiResponse};
-use crate::error::TelegramApiError;
+use crate::{
+    endpoints::{TelegramApiEndpoint, TelegramApiResponse},
+    error::TelegramApiError
+};
 use log::trace;
 use reqwest::Client;
 use serde::de::DeserializeOwned;

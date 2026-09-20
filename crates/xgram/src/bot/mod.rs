@@ -3,23 +3,30 @@
 pub mod config;
 pub mod error;
 
-use crate::bot::config::BotConfig;
-use crate::bot::error::{BotError, BotResult};
-use crate::command::context::CommandContext;
-use crate::command::{CommandHandler, CommandHandlerFuture};
+use crate::{
+    bot::{
+        config::BotConfig,
+        error::{BotError, BotResult}
+    },
+    command::{CommandHandler, CommandHandlerFuture, context::CommandContext}
+};
 use colored::Colorize;
 use hashbrown::HashMap;
 use log::{error, info, trace, warn};
-use std::marker::PhantomData;
-use std::sync::Arc;
+use std::{marker::PhantomData, sync::Arc};
 use str_indices::utf16;
-use xgram_telegram_api::client::TelegramApiClient;
-use xgram_telegram_api::types::message::entity::MessageEntityType;
-use xgram_telegram_api::types::update::{Update, UpdateKind};
-use xgram_telegram_api::update_receiver::UpdateReceiver;
-use xgram_telegram_api::update_receiver::long_polling::LongPollingUpdateReceiver;
-use xgram_utils::config::InnerConfig;
-use xgram_utils::types::{InnerConfigArc, TokenArc};
+use xgram_telegram_api::{
+    client::TelegramApiClient,
+    types::{
+        message::entity::MessageEntityType,
+        update::{Update, UpdateKind}
+    },
+    update_receiver::{UpdateReceiver, long_polling::LongPollingUpdateReceiver}
+};
+use xgram_utils::{
+    config::InnerConfig,
+    types::{InnerConfigArc, TokenArc}
+};
 
 /// Main framework's struct.
 /// # Example

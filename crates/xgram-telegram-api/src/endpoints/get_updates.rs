@@ -1,5 +1,7 @@
-use crate::endpoints::{TelegramApiEndpoint, craft_default_url};
-use crate::types::update::Update;
+use crate::{
+    endpoints::{TelegramApiEndpoint, craft_default_url},
+    types::update::Update
+};
 use serde::Serialize;
 use serde_with::skip_serializing_none;
 

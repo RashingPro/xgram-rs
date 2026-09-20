@@ -1,7 +1,9 @@
-use crate::types::chat::Chat;
-use crate::types::link_preview_options::LinkPreviewOptions;
-use crate::types::message::entity::MessageEntity;
-use crate::types::user::User;
+use crate::types::{
+    chat::Chat,
+    link_preview_options::LinkPreviewOptions,
+    message::entity::MessageEntity,
+    user::User
+};
 use serde::{Deserialize, Deserializer};
 use smallvec::SmallVec;
 

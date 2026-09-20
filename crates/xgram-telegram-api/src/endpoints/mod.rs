@@ -1,5 +1,4 @@
-use serde::de::DeserializeOwned;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use std::fmt::Debug;
 
 pub mod get_updates;

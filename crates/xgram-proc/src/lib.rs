@@ -1,8 +1,16 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::punctuated::Punctuated;
-use syn::token::Comma;
-use syn::{FnArg, Ident, ItemFn, PatType, ReturnType, parse_macro_input, parse_quote};
+use syn::{
+    FnArg,
+    Ident,
+    ItemFn,
+    PatType,
+    ReturnType,
+    parse_macro_input,
+    parse_quote,
+    punctuated::Punctuated,
+    token::Comma
+};
 
 /// Procedural macros for wrapping command handlers.
 /// ```rust,ignore

@@ -12,9 +12,9 @@ pub use xgram_utils as utils;
 /// Exports the most useful items. Recommended to import using a wildcard
 /// syntax: `use xgram::prelude::*`
 pub mod prelude {
-    pub use crate::bot::Bot;
-    pub use crate::bot::config::BotConfig;
-    pub use crate::command::context::CommandContext;
-    pub use crate::command::error::CommandHandlerResult;
-    pub use crate::proc::*;
+    pub use crate::{
+        bot::{Bot, config::BotConfig},
+        command::{context::CommandContext, error::CommandHandlerResult},
+        proc::*
+    };
 }
