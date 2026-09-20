@@ -179,15 +179,16 @@ pub struct Message {
 /// As a result, inner messages may not contain reply information even if _they
 /// are_ replies themselves.
 ///
-/// `Truncated` means that reply relationship is unknown due to Telegram API
-/// limitations. Please note, that this state can _not_ be validated as Telegram
-/// Bot API does _not_ provide a method for fetching messages by their IDs.
+/// [`Self::Truncated`] means that reply relationship is unknown due to Telegram
+/// API limitations. Please note, that this state can _not_ be validated as
+/// Telegram Bot API does _not_ provide a method for fetching messages by their
+/// IDs.
 ///
-/// `Complete` means that reply relationship is known exactly:
+/// [`Self::Complete`] means that reply relationship is known exactly:
 /// - `Complete(Some(_))` — message is a reply
 /// - `Complete(None)` — message is definitely not a reply
 ///
-/// See: https://core.telegram.org/bots/api#message
+/// See: <https://core.telegram.org/bots/api#message>
 #[derive(Debug)]
 pub enum ReplyToMessage {
     Truncated,

@@ -118,9 +118,9 @@ where
     /// Consumes the `Bot` instance and runs the main loop.
     ///
     /// Please note, that this function returns `!` (never type) wrapped in
-    /// `Result`, which currently requires a nightly toolchain.
+    /// [`Result`], which currently requires a nightly toolchain.
     ///
-    /// See: https://doc.rust-lang.org/std/primitive.never.html
+    /// See: [`never`]
     pub async fn run(self) -> BotResult {
         info!(target: "xgram::main_loop", "Running update polling");
 

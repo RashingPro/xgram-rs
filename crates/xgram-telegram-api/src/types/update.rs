@@ -8,7 +8,7 @@ pub struct Update {
     pub update_kind: UpdateKind
 }
 
-/// See: https://core.telegram.org/bots/api#update
+/// See: <https://core.telegram.org/bots/api#update>
 #[derive(Debug)]
 #[non_exhaustive]
 pub enum UpdateKind {
