@@ -4,3 +4,6 @@
 ### IDEs and editors ###
 /.idea/*
 /.vscode/*
+
+### DotEnv ###
+*.env
