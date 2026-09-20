@@ -119,7 +119,7 @@ where
                 format!("/{}", trigger).yellow()
             );
         }
-        self.commands.insert(trigger, Box::new(handler));
+        self.commands.insert(trigger, handler);
     }
 
     /// Consumes the `Bot` instance and runs the main loop.
