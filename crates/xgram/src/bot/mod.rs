@@ -17,6 +17,10 @@ use crate::{
             update::{Update, UpdateKind}
         },
         update_receiver::{UpdateReceiver, long_polling::LongPollingUpdateReceiver}
+    },
+    utils::{
+        config::InnerConfig,
+        types::{InnerConfigArc, TokenArc}
     }
 };
 use colored::Colorize;
@@ -24,10 +28,6 @@ use hashbrown::HashMap;
 use log::{error, info, trace, warn};
 use std::{marker::PhantomData, sync::Arc};
 use str_indices::utf16;
-use xgram_utils::{
-    config::InnerConfig,
-    types::{InnerConfigArc, TokenArc}
-};
 
 /// Main framework's struct.
 /// # Example

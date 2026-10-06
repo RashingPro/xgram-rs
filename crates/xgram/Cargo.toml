@@ -18,7 +18,6 @@ workspace = true
 
 [dependencies]
 xgram-proc.workspace = true
-xgram-utils.workspace = true
 
 colored.workspace = true
 hashbrown.workspace = true

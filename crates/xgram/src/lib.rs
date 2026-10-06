@@ -3,9 +3,9 @@
 
 pub mod bot;
 pub mod telegram_api;
+pub mod utils;
 
 pub use xgram_proc as proc;
-pub use xgram_utils as utils;
 
 /// Exports the most useful items. Recommended to import using a wildcard
 /// syntax: `use xgram::prelude::*`

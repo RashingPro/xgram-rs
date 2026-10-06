@@ -1,12 +1,14 @@
-use crate::telegram_api::{
-    endpoints::{TelegramApiEndpoint, TelegramApiResponse},
-    error::TelegramApiError
+use crate::{
+    telegram_api::{
+        endpoints::{TelegramApiEndpoint, TelegramApiResponse},
+        error::TelegramApiError
+    },
+    utils::types::{InnerConfigArc, TokenArc}
 };
 use log::trace;
 use reqwest::Client;
 use serde::de::DeserializeOwned;
 use std::fmt::Debug;
-use xgram_utils::types::{InnerConfigArc, TokenArc};
 
 #[derive(Clone)]
 pub struct TelegramApiClient {

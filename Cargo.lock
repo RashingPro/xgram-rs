@@ -2201,7 +2201,6 @@ dependencies = [
  "thiserror",
  "tokio",
  "xgram-proc",
- "xgram-utils",
 ]
 
 [[package]]
@@ -2211,10 +2210,6 @@ dependencies = [
  "quote",
  "syn 3.0.5",
 ]
-
-[[package]]
-name = "xgram-utils"
-version = "0.3.0"
 
 [[package]]
 name = "yoke"

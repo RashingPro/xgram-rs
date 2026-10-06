@@ -37,7 +37,6 @@ codegen-units = 1
 
 [workspace.dependencies]
 xgram-proc = { path = "crates/xgram-proc", version = "=0.3.0" }
-xgram-utils = { path = "crates/xgram-utils", version = "=0.3.0" }
 
 tokio = "1.53.1"
 reqwest = "0.13.5"
