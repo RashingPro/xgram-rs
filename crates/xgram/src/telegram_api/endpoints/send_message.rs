@@ -11,7 +11,7 @@ use serde_with::skip_serializing_none;
 use smallvec::SmallVec;
 
 #[skip_serializing_none]
-#[derive(Serialize, Deserialize, Default, Debug)]
+#[derive(Serialize, Deserialize, Debug, Default)]
 pub struct SendMessageEndpoint {
     pub chat_id: i64,
     pub text: String,

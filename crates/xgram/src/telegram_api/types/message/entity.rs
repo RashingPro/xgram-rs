@@ -1,7 +1,7 @@
 use crate::telegram_api::types::user::User;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct MessageEntity {
     #[serde(flatten)]
     pub entity_type: MessageEntityType,
@@ -9,7 +9,7 @@ pub struct MessageEntity {
     pub length: u16
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "type", rename_all = "snake_case")]
 #[non_exhaustive]
 pub enum MessageEntityType {

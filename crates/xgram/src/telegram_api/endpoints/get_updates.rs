@@ -6,7 +6,7 @@ use serde::Serialize;
 use serde_with::skip_serializing_none;
 
 #[skip_serializing_none]
-#[derive(Debug, Default, Serialize)]
+#[derive(Serialize, Debug, Default)]
 pub struct GetUpdatesEndpoint {
     pub offset: Option<u32>,
     pub limit: Option<u8>,
