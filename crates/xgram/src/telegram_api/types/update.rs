@@ -1,4 +1,4 @@
-use crate::types::message::Message;
+use crate::telegram_api::types::message::Message;
 use serde::{Deserialize, Deserializer};
 use serde_json::Value;
 

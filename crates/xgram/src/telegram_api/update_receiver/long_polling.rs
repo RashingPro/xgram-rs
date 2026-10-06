@@ -1,4 +1,4 @@
-use crate::{
+use crate::telegram_api::{
     client::TelegramApiClient,
     endpoints::get_updates::GetUpdatesEndpoint,
     error::TelegramApiError,

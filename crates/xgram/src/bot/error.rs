@@ -1,4 +1,4 @@
-use crate::command::error::CommandHandlerError;
+use crate::bot::command::error::CommandHandlerError;
 use thiserror::Error;
 
 #[derive(Debug, Error)]

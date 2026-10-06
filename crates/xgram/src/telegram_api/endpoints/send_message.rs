@@ -1,4 +1,4 @@
-use crate::{
+use crate::telegram_api::{
     endpoints::{TelegramApiEndpoint, craft_default_url},
     types::{
         link_preview_options::LinkPreviewOptions,

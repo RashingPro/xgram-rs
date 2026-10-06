@@ -1,28 +1,29 @@
 //! Main struct and managing logic.
 
+pub mod command;
 pub mod config;
 pub mod error;
 
 use crate::{
     bot::{
+        command::{CommandHandler, CommandHandlerFuture, context::CommandContext},
         config::BotConfig,
         error::{BotError, BotResult}
     },
-    command::{CommandHandler, CommandHandlerFuture, context::CommandContext}
+    telegram_api::{
+        client::TelegramApiClient,
+        types::{
+            message::entity::MessageEntityType,
+            update::{Update, UpdateKind}
+        },
+        update_receiver::{UpdateReceiver, long_polling::LongPollingUpdateReceiver}
+    }
 };
 use colored::Colorize;
 use hashbrown::HashMap;
 use log::{error, info, trace, warn};
 use std::{marker::PhantomData, sync::Arc};
 use str_indices::utf16;
-use xgram_telegram_api::{
-    client::TelegramApiClient,
-    types::{
-        message::entity::MessageEntityType,
-        update::{Update, UpdateKind}
-    },
-    update_receiver::{UpdateReceiver, long_polling::LongPollingUpdateReceiver}
-};
 use xgram_utils::{
     config::InnerConfig,
     types::{InnerConfigArc, TokenArc}

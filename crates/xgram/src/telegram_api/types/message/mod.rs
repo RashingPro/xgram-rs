@@ -1,4 +1,4 @@
-use crate::types::{
+use crate::telegram_api::types::{
     chat::Chat,
     link_preview_options::LinkPreviewOptions,
     message::entity::MessageEntity,

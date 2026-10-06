@@ -1,4 +1,4 @@
-use xgram_telegram_api::{
+use crate::telegram_api::{
     client::TelegramApiClient,
     endpoints::send_message::SendMessageEndpoint,
     error::TelegramApiError,

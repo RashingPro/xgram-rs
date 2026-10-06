@@ -1,4 +1,4 @@
-use crate::{
+use crate::telegram_api::{
     endpoints::{TelegramApiEndpoint, TelegramApiResponse},
     error::TelegramApiError
 };

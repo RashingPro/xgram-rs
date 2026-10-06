@@ -2191,12 +2191,16 @@ dependencies = [
  "colored",
  "hashbrown 0.17.1",
  "log",
+ "reqwest",
  "rustc_version",
+ "serde",
+ "serde_json",
+ "serde_with",
+ "smallvec",
  "str_indices",
  "thiserror",
  "tokio",
  "xgram-proc",
- "xgram-telegram-api",
  "xgram-utils",
 ]
 
@@ -2206,21 +2210,6 @@ version = "0.3.0"
 dependencies = [
  "quote",
  "syn 3.0.5",
-]
-
-[[package]]
-name = "xgram-telegram-api"
-version = "0.3.0"
-dependencies = [
- "log",
- "reqwest",
- "serde",
- "serde_json",
- "serde_with",
- "smallvec",
- "thiserror",
- "tokio",
- "xgram-utils",
 ]
 
 [[package]]

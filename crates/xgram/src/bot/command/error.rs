@@ -1,5 +1,5 @@
+use crate::telegram_api::error::TelegramApiError;
 use thiserror::Error;
-use xgram_telegram_api::error::TelegramApiError;
 
 #[derive(Debug, Error)]
 pub enum CommandHandlerError {

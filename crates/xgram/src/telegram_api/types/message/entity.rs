@@ -1,4 +1,4 @@
-use crate::types::user::User;
+use crate::telegram_api::types::user::User;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
