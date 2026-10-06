@@ -7,21 +7,24 @@
 <img alt="Deps.rs Crate Dependencies (latest)" src="https://img.shields.io/deps-rs/xgram/latest">
 <img alt="GitHub License" src="https://img.shields.io/github/license/RashingPro/xgram-rs">
 
-Powerful yet blazingly fast Telegram Bot API framework written in Rust, featuring advanced abstractions and
-Tokio-powered concurrency.
+Powerful yet blazingly fast Telegram Bot API framework written in Rust, featuring advanced
+abstractions and Tokio-powered concurrency.
 </div>
 
 ## Usage
 
 > [!NOTE]
-> The nightly toolchain is required as some features that required for the project are not stabilized yet.
+> The nightly toolchain is required as some features that required for the project are not
+stabilized yet.
 
 ### Creating a bot
 
-Open [@BotFather](https://t.me/BotFather) in Telegram. Use the `/newbot` command to create a bot and follow the prompts.
-At the end, you will receive a token – a string like `1234567890:ABCdefGH-AbCd318_someRandom`.  
-Don't share the token with anyone (treat the token like a password: anyone who has it can control your bot), don't store
-it directly in your code and don't commit to the VCS. Instead, create a `.env` file and put it there:
+Open [@BotFather](https://t.me/BotFather) in Telegram. Use the `/newbot` command to create a bot and
+follow the prompts. At the end, you will receive a token – a string like
+`1234567890:ABCdefGH-AbCd318_someRandom`.  
+Don't share the token with anyone (treat the token like a password: anyone who has it can control
+your bot), don't store it directly in your code and don't commit to the VCS. Instead, create a
+`.env` file and put it there:
 
 ```dotenv
 TOKEN=1234567890:ABCdefGH-AbCd318_someRandom
@@ -63,7 +66,7 @@ async fn main() {
     pretty_env_logger::init();
 
     let token = std::env::var("TOKEN").expect("TOKEN environment variable is not set");
-    let config = BotConfig {
+    let config = Config {
         ..Default::default()
     };
 
@@ -87,9 +90,9 @@ Complete documentation is available here: _\*crickets sound\*_
 
 ### Bypassing regional censorship
 
-In some countries and regions, Telegram API endpoints may be blocked by local authorities. Because they are just HTTP
-endpoints, you can't use MTProto proxy to bypass the restrictions. As a solution, you can use Cloudflare Workers along
-with the `api_base_url` config option:
+In some countries and regions, Telegram API endpoints may be blocked by local authorities. Because
+they are just HTTP endpoints, you can't use MTProto proxy to bypass the restrictions. As a solution,
+you can use Cloudflare Workers along with the `api_base_url` config option:
 
 Cloudflare Worker code example:
 
@@ -117,7 +120,7 @@ Bot configuration:
 #[tokio::main]
 async fn main() {
     let token = "my-awesome-token";
-    let config = BotConfig {
+    let config = Config {
         api_base_url: "https://my-cool-worker.my-badass-username.workers.dev/".to_owned(), // URL must include trailing slash
         ..Default::default()
     };
@@ -128,4 +131,5 @@ async fn main() {
 ```
 
 > [!CAUTION]
-> Please remember that without additional configuration, your Cloudflare Worker is publicly accessible to anyone.
+> Please remember that without additional configuration, your Cloudflare Worker is publicly
+accessible to anyone.
