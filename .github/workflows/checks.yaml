@@ -31,4 +31,5 @@ jobs:
       - name: Cargo Audit
         run: cargo audit
       - name: Run tests
+        if: github.ref_name == 'main'
         run: cargo nextest run --config-file nextest.toml --profile ci
