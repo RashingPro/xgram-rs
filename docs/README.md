@@ -48,7 +48,7 @@ Don't forget to exclude `.env` from the VCS:
 ```toml
 [dependencies]
 xgram = "..."
-dotenv = "..." # Optional, but highly recommended
+dotenvy = "..." # Optional, but highly recommended
 pretty_env_logger = "..." # Optional, you can use whatever logger you like
 pretty_unwrap = "..." # Optional
 tokio = { version = "...", features = ["rt-multi-thread", "macros"] }
@@ -62,7 +62,7 @@ use xgram::prelude::*;
 
 #[tokio::main]
 async fn main() {
-    dotenv::dotenv().expect("failed to load .env");
+    dotenvy::dotenv().expect("failed to load .env");
     pretty_env_logger::init();
 
     let token = std::env::var("TOKEN").expect("TOKEN environment variable is not set");

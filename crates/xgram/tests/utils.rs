@@ -1,5 +1,5 @@
 pub fn before_test() {
-    dotenv::from_filename("tests.env").expect("failed to load .env");
+    dotenvy::from_filename("tests.env").expect("failed to load .env");
     pretty_env_logger::init();
 }
 

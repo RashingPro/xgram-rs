@@ -32,7 +32,7 @@ thiserror.workspace = true
 tokio = { workspace = true, default-features = false, features = ["parking_lot"] }
 
 [dev-dependencies]
-dotenv.workspace = true
+dotenvy.workspace = true
 pretty_env_logger.workspace = true
 wiremock.workspace = true
 
