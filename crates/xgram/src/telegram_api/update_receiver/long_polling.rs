@@ -6,7 +6,7 @@ use crate::{
         types::update::Update,
         update_receiver::UpdateReceiver
     },
-    utils::types::InnerConfigArc
+    utils::types::ConfigArc
 };
 use log::{error, warn};
 use std::{cmp::max, time::Duration};
@@ -19,12 +19,12 @@ use tokio::{
 };
 
 pub struct LongPollingUpdateReceiver {
-    config: InnerConfigArc,
+    config: ConfigArc,
     client: TelegramApiClient
 }
 
 impl UpdateReceiver for LongPollingUpdateReceiver {
-    fn new(config: InnerConfigArc, client: TelegramApiClient) -> Self {
+    fn new(config: ConfigArc, client: TelegramApiClient) -> Self {
         Self { config, client }
     }
 
@@ -42,7 +42,7 @@ impl UpdateReceiver for LongPollingUpdateReceiver {
                     .client
                     .make_request(&GetUpdatesEndpoint {
                         offset: Some(offset),
-                        timeout: Some(self.config.http_updates_polling_timeout),
+                        timeout: Some(self.config.update_long_polling_timeout),
                         ..Default::default()
                     })
                     .await;

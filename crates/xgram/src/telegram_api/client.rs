@@ -3,7 +3,7 @@ use crate::{
         endpoints::{TelegramApiEndpoint, TelegramApiResponse},
         error::TelegramApiError
     },
-    utils::types::{InnerConfigArc, TokenArc}
+    utils::types::{ConfigArc, TokenArc}
 };
 use log::trace;
 use reqwest::Client;
@@ -12,13 +12,13 @@ use std::fmt::Debug;
 
 #[derive(Clone)]
 pub struct TelegramApiClient {
-    config: InnerConfigArc,
+    config: ConfigArc,
     token: TokenArc,
     client: Client
 }
 
 impl TelegramApiClient {
-    pub fn new(config: InnerConfigArc, token: TokenArc) -> Self {
+    pub fn new(config: ConfigArc, token: TokenArc) -> Self {
         Self {
             config,
             token,

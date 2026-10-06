@@ -1,13 +1,11 @@
 //! Main struct and managing logic.
 
 pub mod command;
-pub mod config;
 pub mod error;
 
 use crate::{
     bot::{
         command::{CommandHandler, CommandHandlerFuture, context::CommandContext},
-        config::BotConfig,
         error::{BotError, BotResult}
     },
     telegram_api::{
@@ -19,8 +17,8 @@ use crate::{
         update_receiver::{UpdateReceiver, long_polling::LongPollingUpdateReceiver}
     },
     utils::{
-        config::InnerConfig,
-        types::{InnerConfigArc, TokenArc}
+        config::Config,
+        types::{ConfigArc, TokenArc}
     }
 };
 use colored::Colorize;
@@ -51,7 +49,7 @@ where
 {
     client: TelegramApiClient,
     commands: HashMap<String, CommandHandler>,
-    inner_config: InnerConfigArc,
+    config: ConfigArc,
     _u: PhantomData<U>
 }
 
@@ -59,29 +57,18 @@ impl<U> Bot<U>
 where
     U: UpdateReceiver
 {
-    pub fn new(token: impl Into<String>, config: BotConfig) -> Self {
+    pub fn new(token: impl Into<String>, config: Config) -> Self {
         let token = token.into();
 
         let token: TokenArc = Arc::from(token);
+        let config: ConfigArc = Arc::new(config);
 
-        let BotConfig {
-            api_base_url,
-            update_buffer_capacity,
-            update_long_polling_timeout: http_updates_polling_timeout
-        } = config;
-        let inner_config = InnerConfig {
-            api_base_url,
-            update_buffer_capacity,
-            http_updates_polling_timeout
-        };
-        let inner_config = Arc::new(inner_config);
-
-        let client = TelegramApiClient::new(inner_config.clone(), token.clone());
+        let client = TelegramApiClient::new(config.clone(), token.clone());
 
         Self {
             client: client.clone(),
             commands: HashMap::new(),
-            inner_config,
+            config,
             _u: Default::default()
         }
     }
@@ -133,9 +120,9 @@ where
     pub async fn run(self) -> BotResult {
         info!(target: "xgram::main_loop", "Running update polling");
 
-        let mut update_receiver = U::new(self.inner_config.clone(), self.client.clone()).spawn();
+        let mut update_receiver = U::new(self.config.clone(), self.client.clone()).spawn();
         let commands = Arc::new(self.commands);
-        drop(self.inner_config);
+        drop(self.config);
 
         while let Some(update) = update_receiver.recv().await {
             match update {

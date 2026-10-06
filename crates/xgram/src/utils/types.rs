@@ -1,5 +1,5 @@
-use crate::utils::config::InnerConfig;
+use crate::utils::config::Config;
 use std::sync::Arc;
 
 pub type TokenArc = Arc<str>;
-pub type InnerConfigArc = Arc<InnerConfig>;
+pub type ConfigArc = Arc<Config>;

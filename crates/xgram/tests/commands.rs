@@ -13,7 +13,7 @@ use wiremock::{
 };
 use xgram::{
     bot::{Bot, command::CommandHandlerFuture},
-    prelude::{BotConfig, CommandContext},
+    prelude::{CommandContext, Config},
     telegram_api::{
         endpoints::send_message::SendMessageEndpoint,
         update_receiver::long_polling::LongPollingUpdateReceiver
@@ -87,7 +87,7 @@ async fn commands_1() {
 
     let mut bot = Bot::<LongPollingUpdateReceiver>::new(
         token.clone(),
-        BotConfig {
+        Config {
             api_base_url: mock_server.uri() + "/",
             ..Default::default()
         }

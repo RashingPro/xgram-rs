@@ -13,9 +13,9 @@ pub mod prelude {
     pub use crate::{
         bot::{
             Bot,
-            command::{context::CommandContext, error::CommandHandlerResult},
-            config::BotConfig
+            command::{context::CommandContext, error::CommandHandlerResult}
         },
-        proc::*
+        proc::*,
+        utils::config::Config
     };
 }
