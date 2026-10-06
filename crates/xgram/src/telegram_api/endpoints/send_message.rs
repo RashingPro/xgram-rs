@@ -6,12 +6,12 @@ use crate::telegram_api::{
         parse_mode::ParseMode
     }
 };
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 use smallvec::SmallVec;
 
 #[skip_serializing_none]
-#[derive(Serialize, Default, Debug)]
+#[derive(Serialize, Deserialize, Default, Debug)]
 pub struct SendMessageEndpoint {
     pub chat_id: i64,
     pub text: String,

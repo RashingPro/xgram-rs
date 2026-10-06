@@ -1,6 +1,6 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct ReplyParameters {
     pub message_id: u32 // TODO
 }
