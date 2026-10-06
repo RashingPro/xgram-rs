@@ -6,7 +6,7 @@ use crate::{
 };
 use tokio::sync::mpsc;
 
-pub trait UpdateReceiver {
+pub trait UpdateReceiver: Sync + Send + 'static {
     fn new(config: InnerConfigArc, client: TelegramApiClient) -> Self;
 
     fn spawn(self) -> mpsc::Receiver<Result<Update, TelegramApiError>>;

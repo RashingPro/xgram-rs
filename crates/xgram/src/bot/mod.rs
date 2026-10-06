@@ -28,6 +28,7 @@ use hashbrown::HashMap;
 use log::{error, info, trace, warn};
 use std::{marker::PhantomData, sync::Arc};
 use str_indices::utf16;
+use tokio::task::JoinHandle;
 
 /// Main framework's struct.
 /// # Example
@@ -160,6 +161,10 @@ where
         }
 
         Err(BotError::UnreachableCodeReached)
+    }
+
+    pub fn run_detach(self) -> JoinHandle<BotResult> {
+        tokio::spawn(self.run())
     }
 
     async fn handle_update(
