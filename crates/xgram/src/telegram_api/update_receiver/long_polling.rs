@@ -72,7 +72,7 @@ impl UpdateReceiver for LongPollingUpdateReceiver {
                                 }
                             }
                         }
-                        offset = m + 1;
+                        offset = max(offset, m + 1);
                     }
                     Err(err) => {
                         let s = format!("{}", err);
