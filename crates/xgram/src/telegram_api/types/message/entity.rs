@@ -17,9 +17,7 @@ pub enum MessageEntityType {
     Hashtag,
     Cashtag,
     BotCommand,
-    Url {
-        url: Option<String>
-    },
+    Url,
     Email,
     PhoneNumber,
     Bold,
@@ -33,7 +31,9 @@ pub enum MessageEntityType {
     Pre {
         language: Option<String>
     },
-    TextLink,
+    TextLink {
+        url: String
+    },
     TextMention {
         user: User
     },
