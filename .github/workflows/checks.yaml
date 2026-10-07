@@ -24,7 +24,7 @@ jobs:
       - name: Check formatting
         run: cargo fmt --check
       - name: Lint
-        run: cargo clippy -- -D warnings
+        run: cargo clippy --tests -- -D warnings
       - name: Build
         if: github.ref_name == 'main'
         run: cargo build --release
