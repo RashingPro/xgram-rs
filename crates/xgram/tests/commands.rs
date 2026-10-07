@@ -12,12 +12,15 @@ use wiremock::{
     matchers::{method, path}
 };
 use xgram::{
-    bot::{Bot, command::CommandHandlerFuture},
-    prelude::{CommandContext, Config},
+    bot::{
+        Bot,
+        command::{CommandHandlerFuture, context::CommandContext}
+    },
     telegram_api::{
         endpoints::send_message::SendMessageEndpoint,
         update_receiver::long_polling::LongPollingUpdateReceiver
-    }
+    },
+    utils::config::Config
 };
 
 #[tokio::test]
@@ -101,24 +104,10 @@ async fn commands_1() {
 
     let bot = bot.run_detach();
 
-    println!("Waiting");
-
     guard.wait_until_satisfied().await;
 
     bot.abort();
-    println!("Aborted");
     bot.await.unwrap_err();
-
-    println!(
-        "{:#?}",
-        mock_server
-            .received_requests()
-            .await
-            .unwrap_or_default()
-            .iter()
-            .map(|r| format!("{}", r.url))
-            .collect::<Vec<String>>()
-    );
 
     let mut is_ok = false;
     for req in mock_server.received_requests().await.unwrap_or_default() {
@@ -131,6 +120,7 @@ async fn commands_1() {
         assert_eq!(body.text, REPLY_MESSAGE_TEXT);
         assert_eq!(body.reply_parameters.unwrap().message_id, MESSAGE_ID);
         is_ok = true;
+        break;
     }
     assert!(is_ok);
 }
