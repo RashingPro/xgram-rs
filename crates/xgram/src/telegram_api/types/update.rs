@@ -83,7 +83,7 @@ impl<'de> Deserialize<'de> for Update {
                 }
             ) => {
                 match $match_value {
-                    $($key => $kind(serde_json::from_value(serde_json::Value::Object($update_body)).unwrap()),)*
+                    $($key => $kind(serde_json::from_value(serde_json::Value::Object($update_body)).map_err(serde::de::Error::custom)?),)*
                     _ => $fallback_value
                 }
             };
