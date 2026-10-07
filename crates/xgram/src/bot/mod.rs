@@ -165,6 +165,8 @@ where
                     && !message.entities.is_empty()
                 {
                     for entity in &message.entities {
+                        // TODO: /foo@bar syntax parsing
+                        // TODO: more flexible API for !non_standard_command_syntax
                         if let MessageEntityType::BotCommand = entity.entity_type {
                             let start = utf16::to_byte_idx(message_text, entity.offset as usize);
                             let end = utf16::to_byte_idx(
