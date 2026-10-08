@@ -75,10 +75,22 @@ impl UpdateReceiver for LongPollingUpdateReceiver {
                         offset = m + 1;
                     }
                     Err(err) => {
+                        let s = format!("{}", err);
                         if tx.send(Err(err)).await.is_err() {
                             break;
                         }
-                        retry_backoff_multiplier += 1;
+
+                        const MAX_RETRY_BACKOFF_MULTIPLIER: u64 = 10;
+                        if retry_backoff_multiplier < MAX_RETRY_BACKOFF_MULTIPLIER {
+                            retry_backoff_multiplier += 1;
+                        } else {
+                            retry_backoff_multiplier = MAX_RETRY_BACKOFF_MULTIPLIER
+                        }
+                        error!(
+                            target: "xgram::update_receiver",
+                            "Telegram API Error: {}. Retrying in {}...",
+                            s, retry_backoff_multiplier
+                        );
                         sleep(Duration::from_secs(retry_backoff_multiplier)).await;
                     }
                 };
