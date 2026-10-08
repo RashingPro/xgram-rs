@@ -34,13 +34,14 @@ use tokio::task::JoinHandle;
 /// use xgram::prelude::*;
 ///
 /// #[tokio::main]
-/// async fn main() -> BotResult {
-///     dotenv::dotenv().unwrap();
+/// async fn main() {
+///     dotenvy::dotenv().expect("failed to load .env");
+///     pretty_env_logger::init();
 ///
 ///     let token = std::env::var("TOKEN").unwrap();
 ///
 ///     let mut bot = Bot::new(token, Default::default());
-///     bot.run().await
+///     bot.run().await.unwrap();
 /// }
 /// ```
 pub struct Bot<U = LongPollingUpdateReceiver>
@@ -79,14 +80,14 @@ where
     /// use xgram::prelude::*;
     ///
     /// #[tokio::main]
-    /// async fn main() -> BotResult {
-    ///     dotenv::dotenv().unwrap();
+    /// async fn main() {
+    ///     dotenvy::dotenv().expect("failed to load .env");
     ///
-    ///     let token = std::env::var("TOKEN").unwrap();
+    ///     let token = std::env::var("TOKEN").expect("TOKEN environment variable is not set");
     ///
-    ///     let mut bot = Bot::new(token, Default::default());
+    ///     let mut bot: Bot = Bot::new(token, Default::default());
     ///     bot.register_command("start", command_start);
-    ///     bot.run().await
+    ///     bot.run().await.unwrap();
     /// }
     ///
     /// #[command_handler]
