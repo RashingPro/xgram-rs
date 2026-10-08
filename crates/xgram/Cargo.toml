@@ -29,11 +29,12 @@ serde_with.workspace = true
 smallvec = { workspace = true, features = ["serde"] }
 str_indices.workspace = true
 thiserror.workspace = true
-tokio = { workspace = true, default-features = false, features = ["parking_lot"] }
+tokio = { workspace = true, default-features = false, features = ["rt", "sync", "time", "parking_lot"] }
 
 [dev-dependencies]
 dotenvy.workspace = true
 pretty_env_logger.workspace = true
+tokio = { workspace = true, default-features = false, features = ["macros"] }
 wiremock.workspace = true
 
 [build-dependencies]
