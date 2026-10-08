@@ -64,10 +64,10 @@ where
         let token: TokenArc = Arc::from(token);
         let config: ConfigArc = Arc::new(config);
 
-        let client = TelegramApiClient::new(config.clone(), token.clone());
+        let client = TelegramApiClient::new(config.clone(), token);
 
         Self {
-            client: client.clone(),
+            client,
             commands: HashMap::new(),
             config,
             _u: Default::default()
@@ -121,9 +121,8 @@ where
     pub async fn run(self) -> BotResult {
         info!(target: "xgram::main_loop", "Running update polling");
 
-        let mut update_receiver = U::new(self.config.clone(), self.client.clone()).spawn();
+        let mut update_receiver = U::new(self.config, self.client.clone()).spawn();
         let commands = Arc::new(self.commands);
-        drop(self.config);
 
         while let Some(update) = update_receiver.recv().await {
             match update {
