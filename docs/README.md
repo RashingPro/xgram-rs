@@ -14,7 +14,7 @@ abstractions and Tokio-powered concurrency.
 ## Usage
 
 > [!NOTE]
-> The nightly toolchain is required as some features that required for the project are not
+> The nightly toolchain is required as some features that are required for the project are not
 stabilized yet.
 
 ### Creating a bot
