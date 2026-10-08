@@ -33,3 +33,5 @@ jobs:
       - name: Run tests
         if: github.ref_name == 'main'
         run: cargo nextest run --config-file nextest.toml --profile ci
+      - name: Rustdoc
+        run: cargo doc --no-deps
