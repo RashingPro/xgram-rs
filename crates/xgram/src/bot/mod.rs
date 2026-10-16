@@ -10,6 +10,7 @@ use crate::{
     },
     telegram_api::{
         client::TelegramApiClient,
+        error::TelegramApiError,
         types::{
             message::entity::MessageEntityType,
             update::{Update, UpdateKind}
@@ -26,7 +27,7 @@ use hashbrown::HashMap;
 use log::{error, info, trace, warn};
 use std::{marker::PhantomData, sync::Arc};
 use str_indices::utf16;
-use tokio::task::JoinHandle;
+use tokio::{sync::mpsc, task::JoinHandle};
 
 /// Main framework's struct.
 /// # Example
@@ -121,15 +122,30 @@ where
     pub async fn run(self) -> BotResult {
         info!(target: "xgram::main_loop", "Running update polling");
 
-        let mut update_receiver = U::new(self.config, self.client.clone()).spawn();
+        let client = self.client;
+        let update_receiver = U::new(self.config, client.clone()).spawn();
         let commands = Arc::new(self.commands);
 
+        Self::main_loop(client, update_receiver, commands).await;
+
+        Err(BotError::MainLoopTerminated)
+    }
+
+    pub fn run_detach(self) -> JoinHandle<BotResult> {
+        tokio::spawn(self.run())
+    }
+
+    async fn main_loop(
+        client: TelegramApiClient,
+        mut update_receiver: mpsc::Receiver<Result<Update, TelegramApiError>>,
+        commands: Arc<HashMap<String, CommandHandler>>
+    ) {
         while let Some(update) = update_receiver.recv().await {
             match update {
                 Ok(update) => {
                     trace!(target: "xgram::main_loop", "Received update: {:#?}", update);
                     {
-                        let client = self.client.clone();
+                        let client = client.clone();
                         let commands = commands.clone();
                         tokio::spawn(async move {
                             match Self::handle_update(client, update, commands).await {
@@ -146,12 +162,6 @@ where
                 Err(err) => error!(target: "xgram::main_loop", "{}", err)
             }
         }
-
-        Err(BotError::UnreachableCodeReached)
-    }
-
-    pub fn run_detach(self) -> JoinHandle<BotResult> {
-        tokio::spawn(self.run())
     }
 
     async fn handle_update(

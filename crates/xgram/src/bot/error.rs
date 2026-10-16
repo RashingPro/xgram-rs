@@ -5,8 +5,8 @@ use thiserror::Error;
 pub enum BotError {
     #[error(transparent)]
     CommandHandlerError(#[from] CommandHandlerError),
-    #[error("Unreachable code was reached. This is a bug - please report!")]
-    UnreachableCodeReached
+    #[error("The main loop was terminated due to an error or a bug.")]
+    MainLoopTerminated
 }
 
 pub type BotResult = Result<!, BotError>;
