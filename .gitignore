@@ -7,3 +7,4 @@
 
 ### DotEnv ###
 *.env
+!tests.env
