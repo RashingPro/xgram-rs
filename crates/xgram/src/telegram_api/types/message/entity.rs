@@ -45,3 +45,64 @@ pub enum MessageEntityType {
         date_time_format: String
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+    use std::assert_matches;
+
+    #[test]
+    fn message_entity_1() {
+        let json = json!({
+            "type": "bold",
+            "offset": 1,
+            "length": 3
+        });
+
+        let entity: MessageEntity = serde_json::from_value(json).unwrap();
+        assert_matches!(entity.entity_type, MessageEntityType::Bold);
+    }
+
+    #[test]
+    fn message_entity_2() {
+        let json = json!({
+            "type": "pre",
+            "language": "java",
+            "offset": 1,
+            "length": 3
+        });
+
+        let entity: MessageEntity = serde_json::from_value(json).unwrap();
+        assert_matches!(
+            entity.entity_type,
+            MessageEntityType::Pre { language: Some(..) }
+        );
+    }
+
+    #[test]
+    fn message_entity_3() {
+        let json = json!({
+            "type": "pre",
+            "offset": 1,
+            "length": 3
+        });
+
+        let entity: MessageEntity = serde_json::from_value(json).unwrap();
+        assert_matches!(
+            entity.entity_type,
+            MessageEntityType::Pre { language: None }
+        );
+    }
+
+    #[test]
+    fn message_entity_4() {
+        let json = json!({
+            "type": "text_link",
+            "offset": 1,
+            "length": 3
+        });
+
+        serde_json::from_value::<MessageEntity>(json).unwrap_err();
+    }
+}
