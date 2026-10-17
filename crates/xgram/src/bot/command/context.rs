@@ -1,0 +1,44 @@
+use crate::telegram_api::{
+    client::TelegramApiClient,
+    endpoints::send_message::SendMessageEndpoint,
+    error::TelegramApiError,
+    types::message::{Message, reply_parameters::ReplyParameters}
+};
+
+pub struct CommandContext {
+    message: Message,
+    client: TelegramApiClient
+}
+
+impl CommandContext {
+    pub fn new(client: TelegramApiClient, message: Message) -> Self {
+        Self { client, message }
+    }
+
+    pub async fn send(&self, text: impl Into<String>) -> Result<Message, TelegramApiError> {
+        let text = text.into();
+
+        self.client
+            .make_request(&SendMessageEndpoint {
+                chat_id: self.message.chat.id,
+                text,
+                ..Default::default()
+            })
+            .await
+    }
+
+    pub async fn reply(&self, text: impl Into<String>) -> Result<Message, TelegramApiError> {
+        let text = text.into();
+
+        self.client
+            .make_request(&SendMessageEndpoint {
+                chat_id: self.message.chat.id,
+                text,
+                reply_parameters: Some(ReplyParameters {
+                    message_id: self.message.message_id
+                }),
+                ..Default::default()
+            })
+            .await
+    }
+}

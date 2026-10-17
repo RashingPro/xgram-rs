@@ -1,25 +1,33 @@
 //! Main struct and managing logic.
 
-pub mod config;
+pub mod command;
 pub mod error;
 
-use crate::bot::config::BotConfig;
-use crate::bot::error::{BotError, BotResult};
-use crate::command::context::CommandContext;
-use crate::command::{CommandHandler, CommandHandlerFuture};
+use crate::{
+    bot::{
+        command::{CommandHandler, CommandHandlerFuture, context::CommandContext},
+        error::{BotError, BotResult}
+    },
+    telegram_api::{
+        client::TelegramApiClient,
+        error::TelegramApiError,
+        types::{
+            message::entity::MessageEntityType,
+            update::{Update, UpdateKind}
+        },
+        update_receiver::{UpdateReceiver, long_polling::LongPollingUpdateReceiver}
+    },
+    utils::{
+        config::Config,
+        types::{ConfigArc, TokenArc}
+    }
+};
 use colored::Colorize;
 use hashbrown::HashMap;
 use log::{error, info, trace, warn};
-use std::marker::PhantomData;
-use std::sync::Arc;
+use std::{marker::PhantomData, sync::Arc};
 use str_indices::utf16;
-use xgram_telegram_api::client::TelegramApiClient;
-use xgram_telegram_api::types::message::entity::MessageEntityType;
-use xgram_telegram_api::types::update::{Update, UpdateKind};
-use xgram_telegram_api::update_receiver::UpdateReceiver;
-use xgram_telegram_api::update_receiver::http::HttpUpdateReceiver;
-use xgram_utils::config::InnerConfig;
-use xgram_utils::types::{InnerConfigArc, TokenArc};
+use tokio::{sync::mpsc, task::JoinHandle};
 
 /// Main framework's struct.
 /// # Example
@@ -27,22 +35,23 @@ use xgram_utils::types::{InnerConfigArc, TokenArc};
 /// use xgram::prelude::*;
 ///
 /// #[tokio::main]
-/// async fn main() -> BotResult {
-///     dotenv::dotenv().unwrap();
+/// async fn main() {
+///     dotenvy::dotenv().expect("failed to load .env");
+///     pretty_env_logger::init();
 ///
 ///     let token = std::env::var("TOKEN").unwrap();
 ///
 ///     let mut bot = Bot::new(token, Default::default());
-///     bot.run().await
+///     bot.run().await.unwrap();
 /// }
 /// ```
-pub struct Bot<U = HttpUpdateReceiver>
+pub struct Bot<U = LongPollingUpdateReceiver>
 where
     U: UpdateReceiver
 {
     client: TelegramApiClient,
     commands: HashMap<String, CommandHandler>,
-    inner_config: InnerConfigArc,
+    config: ConfigArc,
     _u: PhantomData<U>
 }
 
@@ -50,29 +59,18 @@ impl<U> Bot<U>
 where
     U: UpdateReceiver
 {
-    pub fn new(token: impl Into<String>, config: BotConfig) -> Self {
+    pub fn new(token: impl Into<String>, config: Config) -> Self {
         let token = token.into();
 
         let token: TokenArc = Arc::from(token);
+        let config: ConfigArc = Arc::new(config);
 
-        let BotConfig {
-            api_base_url,
-            update_buffer_capacity,
-            http_updates_polling_timeout
-        } = config;
-        let inner_config = InnerConfig {
-            api_base_url,
-            update_buffer_capacity,
-            http_updates_polling_timeout
-        };
-        let inner_config = Arc::new(inner_config);
-
-        let client = TelegramApiClient::new(inner_config.clone(), token.clone());
+        let client = TelegramApiClient::new(config.clone(), token);
 
         Self {
-            client: client.clone(),
+            client,
             commands: HashMap::new(),
-            inner_config,
+            config,
             _u: Default::default()
         }
     }
@@ -83,14 +81,14 @@ where
     /// use xgram::prelude::*;
     ///
     /// #[tokio::main]
-    /// async fn main() -> BotResult {
-    ///     dotenv::dotenv().unwrap();
+    /// async fn main() {
+    ///     dotenvy::dotenv().expect("failed to load .env");
     ///
-    ///     let token = std::env::var("TOKEN").unwrap();
+    ///     let token = std::env::var("TOKEN").expect("TOKEN environment variable is not set");
     ///
-    ///     let mut bot = Bot::new(token, Default::default());
+    ///     let mut bot: Bot = Bot::new(token, Default::default());
     ///     bot.register_command("start", command_start);
-    ///     bot.run().await
+    ///     bot.run().await.unwrap();
     /// }
     ///
     /// #[command_handler]
@@ -112,28 +110,42 @@ where
                 format!("/{}", trigger).yellow()
             );
         }
-        self.commands.insert(trigger, Box::new(handler));
+        self.commands.insert(trigger, handler);
     }
 
     /// Consumes the `Bot` instance and runs the main loop.
     ///
     /// Please note, that this function returns `!` (never type) wrapped in
-    /// `Result`, which currently requires a nightly toolchain.
+    /// [`Result`], which currently requires a nightly toolchain.
     ///
-    /// See: https://doc.rust-lang.org/std/primitive.never.html
+    /// See: [`never`]
     pub async fn run(self) -> BotResult {
         info!(target: "xgram::main_loop", "Running update polling");
 
-        let mut update_receiver = U::new(self.inner_config.clone(), self.client.clone()).spawn();
+        let client = self.client;
+        let update_receiver = U::new(self.config, client.clone()).spawn();
         let commands = Arc::new(self.commands);
-        drop(self.inner_config);
 
+        Self::main_loop(client, update_receiver, commands).await;
+
+        Err(BotError::MainLoopTerminated)
+    }
+
+    pub fn run_detach(self) -> JoinHandle<BotResult> {
+        tokio::spawn(self.run())
+    }
+
+    async fn main_loop(
+        client: TelegramApiClient,
+        mut update_receiver: mpsc::Receiver<Result<Update, TelegramApiError>>,
+        commands: Arc<HashMap<String, CommandHandler>>
+    ) {
         while let Some(update) = update_receiver.recv().await {
             match update {
                 Ok(update) => {
                     trace!(target: "xgram::main_loop", "Received update: {:#?}", update);
                     {
-                        let client = self.client.clone();
+                        let client = client.clone();
                         let commands = commands.clone();
                         tokio::spawn(async move {
                             match Self::handle_update(client, update, commands).await {
@@ -150,8 +162,6 @@ where
                 Err(err) => error!(target: "xgram::main_loop", "{}", err)
             }
         }
-
-        Err(BotError::UnreachableCodeReached)
     }
 
     async fn handle_update(
@@ -165,6 +175,8 @@ where
                     && !message.entities.is_empty()
                 {
                     for entity in &message.entities {
+                        // TODO: /foo@bar syntax parsing
+                        // TODO: more flexible API for !non_standard_command_syntax
                         if let MessageEntityType::BotCommand = entity.entity_type {
                             let start = utf16::to_byte_idx(message_text, entity.offset as usize);
                             let end = utf16::to_byte_idx(
